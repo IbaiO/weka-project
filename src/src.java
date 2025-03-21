@@ -8,11 +8,17 @@ import weka.core.converters.ArffSaver;
 public class src {
     public static void main(String[] args) {
         ///////////// HASIERAKETAK /////////////
+        if (args.length != 2) {
+            System.out.println("Erabilera: java -jar src.jar <input.arff> <output.arff>");
+            System.exit(0);
+        }
+        String inputFile = args[0]; System.out.println("Sarrerako fitxategia: " + inputFile);
+        String outputFile = args[1]; System.out.println("Irteerako fitxategia: " + outputFile);
         Instances instances = null;
 
         ///////////// IRAKURKETA /////////////
         try {
-            FileReader fi = new FileReader(args[1]);
+            FileReader fi = new FileReader(args[0]);
             instances = new Instances(fi);
             fi.close();
             instances.setClassIndex(instances.numAttributes() - 1);
@@ -31,11 +37,11 @@ public class src {
         ArffSaver saver = new ArffSaver();
         saver.setInstances(instances);
         try {
-            saver.setFile(new File(args[2]));
+            saver.setFile(new File(outputFile));
             saver.writeBatch();
-            System.out.println("Datuak gorde dira: " + args[2]);
+            System.out.println("Datuak gorde dira: " + outputFile);
         } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da " + args[2] + " fitxategia gorde.");
+            System.out.println("ERROREA: Ezin izan da " + outputFile + " fitxategia gorde.");
             e.printStackTrace();
         }
     }
