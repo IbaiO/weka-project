@@ -11,6 +11,7 @@ AURRERA!
 - Proiektuko lanen banaketa, atazak zehaztasun handiz
 - Rolen esleipena: Arduraduna zehaztu ataza bakoitzerako
 - Algoritmoa maila teoriko labur + parm(teorik) sentikorrak -> weka ekorketa
+- kfold EZ --> hold-out BAI
 
-Diseinuan aplikatu behar da lo del labo 5
+Diseinuan aplikatu behar da lo del labo 5/6
 
