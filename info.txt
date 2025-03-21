@@ -1,7 +1,0 @@
-- SW : Prototipoak libreak (arg murrizp. ez)
-- BaseLine Algoritmoa: EZ!
-- Proiektuko lanen banaketa, atazak zehaztasun handiz
-- Rolen esleipena: Arduraduna zehaztu ataza bakoitzerako
-- Algoritmoa maila teoriko labur + parm(teorik) sentikorrak -> weka ekorketa
-
-Diseinuan aplikatu behar da lo del labo 5
