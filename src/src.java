@@ -1,10 +1,14 @@
 package src;
 
+
 import java.io.File;
 import java.io.FileReader;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
+import src.datuGarbiketa;
+import src.NonSparseBoW;
 
+@SuppressWarnings("all")
 public class src {
     public static void main(String[] args) {
         ///////////// HASIERAKETAK /////////////
@@ -27,8 +31,8 @@ public class src {
         }
         
         ///////////// PROCESAMENDUA /////////////
-        // datuak garbitzea
-        // seigarrel laborategia
+        instances = datuGarbiketa.getDatuGarbiketa().garbitu(instances);
+        instances = NonSparseBoW.getNonSparseBoW().transform(instances);
         // bostgarren laborategia
         // VSM algoritmoa
         // Linear regression algoritmoa        
