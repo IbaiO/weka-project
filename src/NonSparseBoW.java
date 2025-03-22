@@ -5,6 +5,7 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 import weka.filters.unsupervised.instance.SparseToNonSparse;
 
+@SuppressWarnings("all")
 public class NonSparseBoW {
     private static NonSparseBoW nireNonSparseBoW = null;
 
