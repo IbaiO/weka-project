@@ -9,8 +9,8 @@ import java.io.File;
 public class lab6 {
     public static void main(String[] args) {
         //For test
-        String dataSource = "Datuak-20250314/1_ToyStringExample/toyStringExample_train_RAW.arff"; // Input
-        String gordeleku = "Datuak-20250314/1_ToyStringExample/toyStringExample_train_BoW_NonSparse2.arff"; // Output
+        String dataSource = "laborategiak/Datuak-20250314/1_ToyStringExample/toyStringExample_train_RAW.arff"; // Input
+        String gordeleku = "laborategiak/Datuak-20250314/1_ToyStringExample/toyStringExample_train_BoW_NonSparse2.arff"; // Output
 
         //String dataSource = args[0];
         //String gordeleku = args[1];
