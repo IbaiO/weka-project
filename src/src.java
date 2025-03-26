@@ -13,7 +13,7 @@ public class src {
     public static void main(String[] args) {
         ///////////// HASIERAKETAK /////////////
         if (args.length != 2) {
-            System.out.println("Erabilera: java -jar src.jar <input.arff> <output.arff>");
+            System.out.println("Erabilera: java -jar weka-project.jar <input.arff> <output.arff>");
             System.exit(0);
         }
         String inputFile = args[0]; System.out.println("Sarrerako fitxategia: " + inputFile);
