@@ -29,8 +29,7 @@ public class linearRegression {
 
         LinearRegression model = buildModel(selectedDataset);
         if (model != null) {
-            System.out.println("LR FORMULA : " + model);
-            predictPrice(model, selectedDataset);
+            predictClass(model, selectedDataset);
         }
     }
 
@@ -73,14 +72,15 @@ public class linearRegression {
         }
     }
 
-    private static void predictPrice(LinearRegression model, Instances dataset) {
+    private static void predictClass(LinearRegression model, Instances dataset) {
         try {
             Instance myHouse = dataset.lastInstance();
-            double price = model.classifyInstance(myHouse);
+            double prediction = model.classifyInstance(myHouse);
+            String predictedClass = prediction > 0.5 ? "Pos" : "Neg";
             System.out.println("-------------------------");
-            System.out.println("PRECTING THE PRICE: " + price);
+            System.out.println("PREDICTED CLASS: " + predictedClass);
         } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da prezioa aurreikusi.");
+            System.out.println("ERROREA: Ezin izan da klasea aurreikusi.");
             e.printStackTrace();
         }
     }
