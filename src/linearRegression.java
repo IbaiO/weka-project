@@ -8,7 +8,7 @@ import weka.classifiers.functions.LinearRegression;
 public class linearRegression{
 	public static void main(String args[]) throws Exception{
 		//Load Data set
-		DataSource source = new DataSource("D:\\DataScienceCollection\\Weka\\house.arff");
+		DataSource source = new DataSource("/home/ibai/GitHub/weka-project/laborategiak/Datuak-20250314/1_ToyStringExample/toyStringExample_train_BoW.arff");
 		Instances dataset = source.getDataSet();
 		//set class index to the last attribute
 		dataset.setClassIndex(dataset.numAttributes()-1);
