@@ -4,6 +4,9 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.classifiers.functions.LinearRegression;
+import weka.attributeSelection.AttributeSelection;
+import weka.attributeSelection.CfsSubsetEval;
+import weka.attributeSelection.BestFirst;
 
 public class linearRegression {
     public static void main(String[] args) {
@@ -17,10 +20,17 @@ public class linearRegression {
 
         dataset.setClassIndex(dataset.numAttributes() - 1);
 
-        LinearRegression model = buildModel(dataset);
+        // Perform feature selection
+        Instances selectedDataset = selectAttributes(dataset);
+        if (selectedDataset == null) {
+            System.out.println("Errorea: Ezin izan da atributuen hautaketa burutu.");
+            return;
+        }
+
+        LinearRegression model = buildModel(selectedDataset);
         if (model != null) {
             System.out.println("LR FORMULA : " + model);
-            predictPrice(model, dataset);
+            predictPrice(model, selectedDataset);
         }
     }
 
@@ -30,6 +40,22 @@ public class linearRegression {
             return source.getDataSet();
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da datu multzoa kargatu.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Instances selectAttributes(Instances dataset) {
+        try {
+            AttributeSelection attributeSelection = new AttributeSelection();
+            CfsSubsetEval evaluator = new CfsSubsetEval();
+            BestFirst search = new BestFirst();
+            attributeSelection.setEvaluator(evaluator);
+            attributeSelection.setSearch(search);
+            attributeSelection.SelectAttributes(dataset);
+            return attributeSelection.reduceDimensionality(dataset);
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da atributuen hautaketa burutu.");
             e.printStackTrace();
             return null;
         }
@@ -52,7 +78,7 @@ public class linearRegression {
             Instance myHouse = dataset.lastInstance();
             double price = model.classifyInstance(myHouse);
             System.out.println("-------------------------");
-            System.out.println("PRECTING THE PRICE : " + price);
+            System.out.println("PRECTING THE PRICE: " + price);
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da prezioa aurreikusi.");
             e.printStackTrace();
