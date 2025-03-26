@@ -1,6 +1,5 @@
 package src;
 
-
 import java.io.File;
 import java.io.FileReader;
 import weka.core.Instances;
@@ -32,7 +31,7 @@ public class src {
         
         ///////////// PROCESAMENDUA /////////////
         instances = datuGarbiketa.getDatuGarbiketa().garbitu(instances);
-        instances = NonSparseBoW.getNonSparseBoW().transform(instances);
+        //instances = NonSparseBoW.getNonSparseBoW().transform(instances);
         // bostgarren laborategia
         // VSM algoritmoa
         // Linear regression algoritmoa        
