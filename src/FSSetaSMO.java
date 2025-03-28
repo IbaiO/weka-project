@@ -10,10 +10,10 @@ import weka.core.converters.ConverterUtils.DataSource;
 
 public class FSSetaSMO {
 
-    public static void main(String[] args) throws Exception {
+    public static SMO main(String[] args) throws Exception {
 
-        String data = args[0];
-        DataSource source = new DataSource(data); 
+        String traindata = args[0];
+        DataSource source = new DataSource(traindata); 
         Instances train = source.getDataSet();
 
         // Set the class index to the last attribute
@@ -39,6 +39,11 @@ public class FSSetaSMO {
             System.out.print(selectedAttributes[i] + " ");
         }
 
+        // Apply the filter to the training set
+        System.out.println("Number of attributes before feature selection: " + train.numAttributes());
+        Instances filteredTrain = attributeSelection.reduceDimensionality(train);
+        System.out.println("Number of attributes after feature selection: " + filteredTrain.numAttributes());
+
         // Train a SMO model using the train
         SMO smo = new SMO();
         smo.setC(1.0);
@@ -47,15 +52,14 @@ public class FSSetaSMO {
         smo.setToleranceParameter(0.001);
 
         smo.buildClassifier(train);
-
-        // Apply the filter to the training set
-        Instances filteredTrain = attributeSelection.reduceDimensionality(train);
-        System.out.println("Number of attributes after feature selection: " + filteredTrain.numAttributes());
  
         // Build the model
         smo.buildClassifier(filteredTrain);
         System.out.println("Model built successfully.");
         System.out.println( "\n");
+
+        // Return the trained model
+        return smo;
     }
 }
 
