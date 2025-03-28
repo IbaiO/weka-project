@@ -1,8 +1,11 @@
 package src;
 
+import java.util.regex.Pattern;
+
 import weka.attributeSelection.AttributeSelection;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
@@ -26,6 +29,23 @@ public class NonSparseBoW {
     }
 
     private Instances datu_garbiketa(Instances datuak) {
+        Pattern hashtagPattern = Pattern.compile("#\\w+");
+        Pattern punctuationPattern = Pattern.compile("\\p{Punct}");
+
+        for (int i = 0; i < datuak.numInstances(); i++) {
+            Instance instance = datuak.instance(i);
+            for (int j = 0; j < instance.numAttributes(); j++) {
+                if (instance.attribute(j).isString()) {
+                    String text = instance.stringValue(j);
+                    text = text.replaceAll("\"", ""); // Komatxoak kendu
+                    text = text.toLowerCase(); // Letra xehetan bihurtu
+                    text = hashtagPattern.matcher(text).replaceAll(""); // Hashtagak kendu
+                    text = punctuationPattern.matcher(text).replaceAll(""); // Puntuazioak kendu
+                    instance.setValue(j, text);
+                }
+            }
+        }
+
         // Use the AttributeSelection class to perform feature selection
         AttributeSelection attributeSelection = new AttributeSelection();
         CfsSubsetEval evaluator = new CfsSubsetEval();
@@ -52,6 +72,7 @@ public class NonSparseBoW {
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da datu garbiketa burutu.");
             e.printStackTrace();
+            System.exit(1);
             return null;
         }
     }
