@@ -1,8 +1,5 @@
 package src;
 
-import weka.attributeSelection.AttributeSelection;
-import weka.attributeSelection.BestFirst;
-import weka.attributeSelection.CfsSubsetEval;
 import weka.classifiers.functions.SMO;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;

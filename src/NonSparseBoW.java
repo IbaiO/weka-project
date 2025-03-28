@@ -18,14 +18,14 @@ public class NonSparseBoW {
         } return nireNonSparseBoW;
     }
 
-    public Instances transform(Instances data) {
+    public Instances transform(Instances data) throws Exception {
         Instances dataGarbi = datu_garbiketa(data);
         Instances BoWData = transformToBoW(data);
         Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
         return NonSparseBoWData;
     }
 
-    private Instances datu_garbiketa(Instances datuak) {
+    private Instances datu_garbiketa(Instances datuak) throws Exception {
         // Use the AttributeSelection class to perform feature selection
         AttributeSelection attributeSelection = new AttributeSelection();
         CfsSubsetEval evaluator = new CfsSubsetEval();
