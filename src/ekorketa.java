@@ -23,7 +23,8 @@ public class ekorketa {
         return nireDG;
     }
 
-    public Instances ekorketa(String inPath, String outPath) {
+    public Instances ekorketa(String inPath) {
+        String outPath = null; //TODO: Zein izenarekin aterako da .arff?
         Instances data = null;
         try {
             // Leer las carpetas dentro del directorio
