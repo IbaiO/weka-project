@@ -3,11 +3,11 @@ package src;
 import weka.core.Instances;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
-import weka.core.FastVector;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,54 +23,65 @@ public class ekorketa {
         return nireDG;
     }
 
-    public Instances ekorketa(String inPath) {
-        String outPath = null; //TODO: Zein izenarekin aterako da .arff?
+    public Instances ekorketa(String inPath, String outFile) {
+        // .model luzapena kendu eta .arff bihurtu
+        String arffOutFile = outFile.replaceAll("\\.model$", ".arff");
         Instances data = null;
         try {
-            // Leer las carpetas dentro del directorio
+            // Direktorioko karpetak irakurri
             File dir = new File(inPath);
             if (!dir.isDirectory()) {
-                throw new Exception("El path proporcionado no es un directorio.");
+                throw new Exception("Emandako path-a ez da direktorio bat.");
             }
 
-            // Obtener las carpetas (clases)
+            // Karpetak (klasea) lortu
             File[] classFolders = dir.listFiles(File::isDirectory);
-            if (classFolders == null || classFolders.length == 0) {
-                throw new Exception("No se encontraron carpetas dentro del directorio.");
-            }
 
-            // Crear atributos para el archivo .arff
+            // .arff fitxategirako atributuak sortu
             ArrayList<Attribute> attributes = new ArrayList<>();
-            attributes.add(new Attribute("file_name", (List<String>) null)); // Nombre del archivo
+            attributes.add(new Attribute("file_content", (List<String>) null)); // Fitxategiaren edukia
             List<String> classValues = new ArrayList<>();
             for (File folder : classFolders) {
-                classValues.add(folder.getName()); // Nombres de las carpetas como clases
+                classValues.add(folder.getName()); // Karpeten izenak klase bezala
             }
-            attributes.add(new Attribute("class", classValues)); // Atributo de clase
+            attributes.add(new Attribute("class", classValues)); // Klase atributua
 
-            // Crear el conjunto de datos
+            // Datu multzoa sortu
             data = new Instances("Dataset", attributes, 0);
-            data.setClassIndex(1); // El atributo "class" es el atributo de clase
+            data.setClassIndex(1); // "class" atributua klase atributua da
 
-            // Recorrer las carpetas y agregar instancias
+            // Karpetak zeharkatu eta instantziak gehitu
             for (File folder : classFolders) {
                 File[] files = folder.listFiles(File::isFile);
                 if (files != null) {
                     for (File file : files) {
+                        // Fitxategiaren edukia irakurri
+                        StringBuilder contentBuilder = new StringBuilder();
+                        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                contentBuilder.append(line).append("\n");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Errorea fitxategia irakurtzean: " + file.getName());
+                            e.printStackTrace();
+                        }
+
+                        // Instantzia sortu eta datuak gehitu
                         DenseInstance instance = new DenseInstance(2);
-                        instance.setValue(attributes.get(0), file.getName()); // Nombre del archivo
-                        instance.setValue(attributes.get(1), folder.getName()); // Clase (nombre de la carpeta)
+                        instance.setValue(attributes.get(0), contentBuilder.toString()); // Fitxategiaren edukia
+                        instance.setValue(attributes.get(1), folder.getName()); // Klasea (karpetaren izena)
                         data.add(instance);
                     }
                 }
             }
 
-            // Guardar el archivo .arff
-            FileWriter writer = new FileWriter(outPath);
+            // .arff fitxategia gorde
+            FileWriter writer = new FileWriter(arffOutFile);
             writer.write(data.toString());
             writer.close();
 
-            System.out.println("Archivo .arff creado exitosamente en: " + outPath);
+            System.out.println("Fitxategia .arff formatuan ongi sortu da hemen: " + arffOutFile);
 
         } catch (Exception e) {
             System.out.println("Errorea: " + e.getMessage());
