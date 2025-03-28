@@ -19,6 +19,9 @@ public class src {
         String outputFile = args[1]; System.out.println("Irteerako fitxategia: " + outputFile);
         Instances instances = null;
 
+        ///////////// PROCESAMENDUA /////////////
+        instances = ekorketa.getEkorketa().ekorketa(inputPath, outputFile);
+
         ///////////// IRAKURKETA /////////////
         try {
             FileReader fi = new FileReader(args[0]);
@@ -28,9 +31,7 @@ public class src {
         } catch (Exception e) {
             System.out.println("Errorea: " + e.getMessage());
         }
-        
-        ///////////// PROCESAMENDUA /////////////
-        instances = ekorketa.getEkorketa().ekorketa(inputPath);
+    
         instances = NonSparseBoW.getNonSparseBoW().transform(instances);
         // bostgarren laborategia
         // SMO algoritmoa
