@@ -33,7 +33,7 @@ public class src {
         instances = datuGarbiketa.getDatuGarbiketa().garbitu(instances);
         //instances = NonSparseBoW.getNonSparseBoW().transform(instances);
         // bostgarren laborategia
-        // VSM algoritmoa
+        // SMO algoritmoa
         // Linear regression algoritmoa        
 
         ///////////// IDAZKETA /////////////

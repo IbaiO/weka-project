@@ -33,7 +33,7 @@ public class FSSetaSMO {
         smo.buildClassifier(train);
  
         // Build the model
-        smo.buildClassifier(filteredTrain);
+        smo.buildClassifier(train);
         System.out.println("Model built successfully.");
         System.out.println( "\n");
 
