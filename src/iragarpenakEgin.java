@@ -19,11 +19,25 @@ public class iragarpenakEgin {
     private static void linearRegressionIragarri(LinearRegression model, Instances dataset) {
         String outputFilePath = "/home/ibai/GitHub/weka-project/probaData/iragarpena_LinearRegression.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+            // Write predictions
             for (int i = 0; i < dataset.numInstances(); i++) {
                 Instance instance = dataset.instance(i);
                 double prediction = model.classifyInstance(instance);
                 String predictedClass = prediction > 0.5 ? "Pos" : "Neg";
-                writer.write("Instance " + (i + 1) + ": Predicted Class = " + predictedClass + "\n");
+
+                // Format attributes
+                StringBuilder attributes = new StringBuilder();
+                for (int j = 0; j < instance.numAttributes(); j++) {
+                    if (j != instance.classIndex()) { // Skip the class attribute
+                        attributes.append(instance.value(j));
+                        if (j < instance.numAttributes() - 1) {
+                            attributes.append(", ");
+                        }
+                    }
+                }
+
+                // Write formatted line
+                writer.write((i + 1) + ". instantzia: " + predictedClass + ", (" + attributes + ")\n");
             }
             System.out.println("Predictions saved to: " + outputFilePath);
         } catch (IOException e) {
