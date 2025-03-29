@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
-import src.ekorketa;
-import src.NonSparseBoW;
 
 @SuppressWarnings("all")
 public class src {
@@ -21,25 +19,15 @@ public class src {
 
         ///////////// PROCESAMENDUA /////////////
         instances = ekorketa.getEkorketa().ekorketa(inputPath, outputFile);
-
-        ///////////// IRAKURKETA /////////////
-        try {
-            FileReader fi = new FileReader(args[0]);
-            instances = new Instances(fi);
-            fi.close();
-            instances.setClassIndex(instances.numAttributes() - 1);
-        } catch (Exception e) {
-            System.out.println("Errorea: " + e.getMessage());
-        }
-    
-        instances = NonSparseBoW.getNonSparseBoW().transform(instances);
+        instances.setClassIndex(instances.numAttributes() - 1);
+        Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transform(instances, outputFile);
         // bostgarren laborategia
         // SMO algoritmoa
         // Linear regression algoritmoa        
 
         ///////////// IDAZKETA /////////////
         ArffSaver saver = new ArffSaver();
-        saver.setInstances(instances);
+        saver.setInstances(BoWinstances);
         try {
             saver.setFile(new File(outputFile));
             saver.writeBatch();
