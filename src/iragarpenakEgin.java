@@ -1,6 +1,7 @@
 package src;
 
 import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.functions.SMO;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -9,14 +10,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class iragarpenakEgin {
-    private static void main(Instances dataset) {
+    private static void main(Instances dataset) throws Exception {
         LinearRegression modelLR = linearRegression.linearRegressionSortu(null);
-        if (modelLR != null) {
-            linearRegressionIragarri(modelLR, dataset);
+        SMO modelSMO = FSSetaSMO.main(null);
+        if (modelLR != null || modelSMO != null) {
+            iragarri(modelLR, dataset);
         }
+        konprobatuDev();
     }
     
-    private static void linearRegressionIragarri(LinearRegression model, Instances dataset) {
+    private static void iragarri(LinearRegression model, Instances dataset) {
         String outputFilePath = "/home/ibai/GitHub/weka-project/probaData/iragarpena_LinearRegression.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
             // Write predictions
@@ -47,5 +50,9 @@ public class iragarpenakEgin {
             System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
             e.printStackTrace();
         }
+    }
+
+    private static void konprobatuDev() {
+        System.out.println("Konprobatu dev");
     }
 }
