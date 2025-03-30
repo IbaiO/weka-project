@@ -1,0 +1,4 @@
+1. instantzia: Pos, (NaN, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, )
+2. instantzia: Pos, (NaN, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, )
+3. instantzia: Pos, (NaN, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, )
+4. instantzia: Pos, (NaN, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, )

@@ -3,9 +3,12 @@ package src;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.classifiers.functions.LinearRegression;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class linearRegression {
-    public static LinearRegression linearRegressionSortu(String[] args) {
+    public static LinearRegression main(Instances dataset) throws Exception {
+        /* 
         String dataSource = args[0];
 
         Instances dataset = loadData(dataSource);
@@ -13,9 +16,12 @@ public class linearRegression {
             System.out.println("Mesedez, egiaztatu helbidea ondo sartu duzula.");
             return null;
         }
-
-        dataset.setClassIndex(dataset.numAttributes() - 1);
-
+        */
+        dataset = preprocessData(dataset);
+        if (dataset.classIndex() == -1) {
+            dataset.setClassIndex(dataset.numAttributes() - 1);
+        }
+    
         LinearRegression model = buildModel(dataset);
         if (model != null)
             return model;
@@ -28,6 +34,33 @@ public class linearRegression {
             return source.getDataSet();
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da datu multzoa kargatu.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Instances preprocessData(Instances dataset) {
+        try {
+            // Check if there are string attributes
+            boolean hasStringAttributes = false;
+            for (int i = 0; i < dataset.numAttributes(); i++) {
+                if (dataset.attribute(i).isString()) {
+                    hasStringAttributes = true;
+                    break;
+                }
+            }
+
+            if (hasStringAttributes) {
+                // Apply StringToWordVector filter
+                StringToWordVector stringToWordVector = new StringToWordVector();
+                stringToWordVector.setInputFormat(dataset);
+                dataset = Filter.useFilter(dataset, stringToWordVector);
+            }
+
+            // Binary attributes are already numeric (0 or 1), so no additional processing is needed
+            return dataset;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da datuak aurreprozesatu.");
             e.printStackTrace();
             return null;
         }

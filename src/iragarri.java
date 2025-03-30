@@ -1,10 +1,11 @@
 package src;
 
 import weka.classifiers.functions.LinearRegression;
-import weka.classifiers.functions.SMO;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.unsupervised.attribute.StringToWordVector;
+import weka.filters.Filter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -12,33 +13,58 @@ import java.io.IOException;
 
 public class iragarri {
     public static void main(String[] args) throws Exception {
-        //String dataSource = args[0];
-        String dataSource = "probaData/toyStringExample_NonSparseBoW.arff";
-        Instances dataset = loadData(dataSource);
-        dataset.setClassIndex(dataset.numAttributes() - 1);
+        // Entrenamiento y prueba (inputs manuales)
+        String trainSource = "probaData/toyStringExample_train_RAW.arff";
+        String testSource = "probaData/toyStringExample_test_RAW.arff";
 
-        // Sortu modeloa
-        LinearRegression modelLR = linearRegression.linearRegressionSortu(null);
-        SMO modelSMO = FSSetaSMO.main(null);
-        if (modelLR != null || modelSMO != null) {
-            iragarketakEgin(modelLR, dataset);
+        // Cargar conjuntos de datos
+        Instances trainSet = loadData(trainSource);
+        Instances testSet = loadData(testSource);
+
+        if (trainSet == null || testSet == null) {
+            System.out.println("Errorea: Ezin izan da datu multzoak kargatu.");
+            return;
         }
+
+        // Configurar índice de clase
+        if (trainSet.classIndex() == -1) {
+            trainSet.setClassIndex(trainSet.numAttributes() - 1);
+        }
+        if (testSet.classIndex() == -1) {
+            testSet.setClassIndex(testSet.numAttributes() - 1);
+        }
+
+        // Crear modelo de regresión lineal
+        LinearRegression modelLR = linearRegression.main(trainSet);
+        if (modelLR != null) {
+            // Preprocesar el conjunto de prueba
+            Instances processedTestSet = preprocessTestData(testSet, trainSet);
+            if (processedTestSet == null) {
+                System.out.println("Errorea: Ezin izan da test datuak aurreprozesatu.");
+                return;
+            }
+
+            // Realizar predicciones
+            iragarketakEgin(modelLR, processedTestSet);
+        }
+
+        // Método de depuración
         konprobatuDev();
     }
-    
+
     private static void iragarketakEgin(LinearRegression model, Instances dataset) {
-        String outputFilePath = "/home/ibai/GitHub/weka-project/probaData/iragarpena_LinearRegression.txt";
+        String outputFilePath = "src/emaitzak/iragarpena_LinearRegression.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
-            // Write predictions
+            // Escribir predicciones
             for (int i = 0; i < dataset.numInstances(); i++) {
                 Instance instance = dataset.instance(i);
                 double prediction = model.classifyInstance(instance);
                 String predictedClass = prediction > 0.5 ? "Pos" : "Neg";
 
-                // Format attributes
+                // Formatear atributos
                 StringBuilder attributes = new StringBuilder();
                 for (int j = 0; j < instance.numAttributes(); j++) {
-                    if (j != instance.classIndex()) { // Skip the class attribute
+                    if (j != instance.classIndex()) { // Omitir el atributo de clase
                         attributes.append(instance.value(j));
                         if (j < instance.numAttributes() - 1) {
                             attributes.append(", ");
@@ -46,7 +72,7 @@ public class iragarri {
                     }
                 }
 
-                // Write formatted line
+                // Escribir línea formateada
                 writer.write((i + 1) + ". instantzia: " + predictedClass + ", (" + attributes + ")\n");
             }
             System.out.println("Predictions saved to: " + outputFilePath);
@@ -59,10 +85,28 @@ public class iragarri {
         }
     }
 
+    private static Instances preprocessTestData(Instances testSet, Instances trainSet) {
+        try {
+            // Aplicar el mismo preprocesamiento que el conjunto de entrenamiento
+            StringToWordVector stringToWordVector = new StringToWordVector();
+            stringToWordVector.setInputFormat(trainSet); // Usar el formato del conjunto de entrenamiento
+            Instances processedTestSet = Filter.useFilter(testSet, stringToWordVector);
+
+            // Configurar índice de clase
+            processedTestSet.setClassIndex(processedTestSet.numAttributes() - 1);
+
+            return processedTestSet;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da test datuak aurreprozesatu.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private static void konprobatuDev() {
         System.out.println("Konprobatu dev");
     }
-    
+
     private static Instances loadData(String dataSource) {
         try {
             DataSource source = new DataSource(dataSource);
@@ -73,5 +117,4 @@ public class iragarri {
             return null;
         }
     }
-
 }
