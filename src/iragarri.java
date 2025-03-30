@@ -52,12 +52,15 @@ public class iragarri {
         konprobatuDev();
     }
 
-    private static void iragarketakEgin(LinearRegression model, Instances dataset) {
+    private static void iragarketakEgin(LinearRegression model, Instances RAWinstances) throws Exception {
+
+        //Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transformToBoW(RAWinstances);
+        //Instances NonSparseinstances = NonSparseBoW.getNonSparseBoW().transformToBoWNonSparse(BoWinstances);
         String outputFilePath = "src/emaitzak/iragarpena_LinearRegression.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
             // Escribir predicciones
-            for (int i = 0; i < dataset.numInstances(); i++) {
-                Instance instance = dataset.instance(i);
+            for (int i = 0; i < RAWinstances.numInstances(); i++) {
+                Instance instance = RAWinstances.instance(i);
                 double prediction = model.classifyInstance(instance);
                 String predictedClass = prediction > 0.5 ? "Pos" : "Neg";
 

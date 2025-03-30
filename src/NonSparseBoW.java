@@ -85,7 +85,7 @@ public class NonSparseBoW {
         }
     }
 
-    private Instances transformToBoW(Instances data) {
+    public Instances transformToBoW(Instances data) {
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
         filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
@@ -104,7 +104,7 @@ public class NonSparseBoW {
         }
     }
 
-    private Instances transformToBoWNonSparse(Instances data) {
+    public Instances transformToBoWNonSparse(Instances data) {
         SparseToNonSparse filter = new SparseToNonSparse();
         try {
             filter.setInputFormat(data);

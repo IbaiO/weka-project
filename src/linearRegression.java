@@ -28,17 +28,6 @@ public class linearRegression {
         return null;
     }
 
-    private static Instances loadData(String dataSource) {
-        try {
-            DataSource source = new DataSource(dataSource);
-            return source.getDataSet();
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da datu multzoa kargatu.");
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     private static Instances preprocessData(Instances dataset) {
         try {
             // Check if there are string attributes
