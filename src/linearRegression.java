@@ -6,7 +6,7 @@ import weka.classifiers.functions.LinearRegression;
 
 public class linearRegression {
     public static LinearRegression linearRegressionSortu(String[] args) {
-        String dataSource = "/home/ibai/GitHub/weka-project/probaData/toyStringExample_NonSparseBoW.arff";
+        String dataSource = args[0];
 
         Instances dataset = loadData(dataSource);
         if (dataset == null) {

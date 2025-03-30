@@ -4,22 +4,29 @@ import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.SMO;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class iragarpenakEgin {
-    private static void main(Instances dataset) throws Exception {
+public class iragarri {
+    public static void main(String[] args) throws Exception {
+        //String dataSource = args[0];
+        String dataSource = "probaData/toyStringExample_NonSparseBoW.arff";
+        Instances dataset = loadData(dataSource);
+        dataset.setClassIndex(dataset.numAttributes() - 1);
+
+        // Sortu modeloa
         LinearRegression modelLR = linearRegression.linearRegressionSortu(null);
         SMO modelSMO = FSSetaSMO.main(null);
         if (modelLR != null || modelSMO != null) {
-            iragarri(modelLR, dataset);
+            iragarketakEgin(modelLR, dataset);
         }
         konprobatuDev();
     }
     
-    private static void iragarri(LinearRegression model, Instances dataset) {
+    private static void iragarketakEgin(LinearRegression model, Instances dataset) {
         String outputFilePath = "/home/ibai/GitHub/weka-project/probaData/iragarpena_LinearRegression.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
             // Write predictions
@@ -55,4 +62,16 @@ public class iragarpenakEgin {
     private static void konprobatuDev() {
         System.out.println("Konprobatu dev");
     }
+    
+    private static Instances loadData(String dataSource) {
+        try {
+            DataSource source = new DataSource(dataSource);
+            return source.getDataSet();
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da datu multzoa kargatu.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
