@@ -49,20 +49,21 @@ public class iragarri {
         }
 
         // Método de depuración
-        konprobatuDev();
+        //eraikiDev();
+        ebaluatuDev(modelLR, "probaData/toyStringExample_dev_RAW.arff");
     }
 
     private static void iragarketakEgin(LinearRegression model, Instances RAWinstances) throws Exception {
 
-        Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transformToBoW(RAWinstances);
-        Instances NonSparseinstances = NonSparseBoW.getNonSparseBoW().transformToBoWNonSparse(BoWinstances);
+        //Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transformToBoW(RAWinstances);
+        //Instances NonSparseinstances = NonSparseBoW.getNonSparseBoW().transformToBoWNonSparse(BoWinstances);
         String outputFilePath = "src/emaitzak/iragarpena_LinearRegression.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
             // Escribir predicciones
             for (int i = 0; i < RAWinstances.numInstances(); i++) {
                 Instance instance = RAWinstances.instance(i);
                 double prediction = model.classifyInstance(instance);
-                String predictedClass = prediction > 0.5 ? "Pos" : "Neg";
+                boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
 
                 // Formatear atributos
                 StringBuilder attributes = new StringBuilder();
@@ -76,7 +77,8 @@ public class iragarri {
                 }
 
                 // Escribir línea formateada
-                writer.write((i + 1) + ". instantzia: " + predictedClass + ", (" + attributes + ")\n");
+                writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg") + 
+                             ", (" + attributes + ")\n");
             }
             System.out.println("Predictions saved to: " + outputFilePath);
         } catch (IOException e) {
@@ -106,7 +108,106 @@ public class iragarri {
         }
     }
 
-    private static void konprobatuDev() {
+    private static void ebaluatuDev(LinearRegression modelLR, String devFilePath) {
+        System.out.println("Evaluating dev set: " + devFilePath);
+        Instances devSet = loadData(devFilePath);
+
+        if (devSet == null) {
+            System.out.println("Errorea: Ezin izan da dev datu multzoa kargatu.");
+            return;
+        }
+
+        // Ensure class index is set
+        if (devSet.classIndex() == -1) {
+            devSet.setClassIndex(devSet.numAttributes() - 1);
+        }
+
+        // Preprocess the dev set to ensure consistency with the training set
+        devSet = preprocessDevData(devSet);
+    
+
+        String outputFilePath = "src/emaitzak/iragarpenaDev_LinearRegression.txt";
+        int correctPredictions = 0;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+            writer.write("Predictions for dev set:\n");
+
+            for (int i = 0; i < devSet.numInstances(); i++) {
+                Instance instance = devSet.instance(i);
+
+                // Predict the class
+                double prediction = modelLR.classifyInstance(instance);
+                System.out.println("Prediction: " + prediction);
+                boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
+
+                // Get the true class
+                boolean trueClass;
+                if (devSet.classAttribute().isNominal()) {
+                    String classValue = devSet.classAttribute().value((int) instance.value(devSet.classIndex()));
+                    System.out.println("Class value: " + classValue);
+                    trueClass = classValue.equals("Pos");
+                } else if (devSet.classAttribute().isString()) {
+                    trueClass = instance.stringValue(devSet.classIndex()).equals("Pos");
+                    System.out.println("True class (String): " + instance.stringValue(devSet.classIndex()));
+                } else if (devSet.classAttribute().isNumeric()) {
+                    trueClass = instance.value(devSet.classIndex()) > 0.5;
+                    System.out.println("True class (Numeric): " + instance.value(devSet.classIndex()));
+                } else {
+                    throw new IllegalArgumentException("Unsupported class attribute type.");
+                }
+
+                // Compare prediction with true class
+                if (predictedClass == trueClass) {
+                    correctPredictions++;
+                }
+
+                // Write prediction to file
+                writer.write((i + 1) + ". instantzia: Predicted=" + (predictedClass ? "Pos" : "Neg") + 
+                             ", True=" + (trueClass ? "Pos" : "Neg") + "\n");
+            }
+
+            // Calculate and write accuracy
+            double accuracy = (double) correctPredictions / devSet.numInstances() * 100;
+            writer.write("\nAccuracy: " + String.format("%.2f", accuracy) + "%\n");
+            System.out.println("Dev set evaluation completed. Results saved to: " + outputFilePath);
+        } catch (IOException e) {
+            System.out.println("ERROREA: Ezin izan da iragarpenak fitxategian gorde.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
+            e.printStackTrace();
+        }
+    }
+
+    private static Instances preprocessDevData(Instances devSet) {
+        try {
+            // Apply StringToWordVector filter if there are string attributes
+            boolean hasStringAttributes = false;
+            for (int i = 0; i < devSet.numAttributes(); i++) {
+                if (devSet.attribute(i).isString()) {
+                    hasStringAttributes = true;
+                    break;
+                }
+            }
+
+            if (hasStringAttributes) {
+                StringToWordVector stringToWordVector = new StringToWordVector();
+                stringToWordVector.setInputFormat(devSet);
+                devSet = Filter.useFilter(devSet, stringToWordVector);
+            }
+
+            // Ensure class index is set after preprocessing
+            devSet.setClassIndex(devSet.numAttributes() - 1);
+
+            return devSet;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da dev datuak aurreprozesatu.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static void eraikiDev() {
         String devFolderPath = "dev/";
         String outputArffPath = "src/emaitzak/dev_data.arff";
 
