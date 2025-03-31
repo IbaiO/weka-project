@@ -1,7 +1,6 @@
 package src;
 
 import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
 import weka.classifiers.functions.LinearRegression;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;

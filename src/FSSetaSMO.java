@@ -3,15 +3,35 @@ package src;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.meta.CVParameterSelection;
 import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class FSSetaSMO {
 
-    public static SMO main(String[] args) throws Exception {
+    public static void main(Instances data) throws Exception {
 
-        String traindata = args[0];
-        DataSource source = new DataSource(traindata); 
-        Instances train = source.getDataSet();
+        // Load the training data
+        Instances train = data;
+        if (train == null) {
+            System.out.println("Error: Unable to load training data.");
+            return;
+        }
+        
+        // Check if there are string attributes
+        boolean hasStringAttributes = false;
+        for (int i = 0; i < train.numAttributes(); i++) {
+            if (train.attribute(i).isString()) {
+                    hasStringAttributes = true;
+                    break;
+                }
+            }
+
+            if (hasStringAttributes) {
+                // Apply StringToWordVector filter
+                StringToWordVector stringToWordVector = new StringToWordVector();
+                stringToWordVector.setInputFormat(train);
+                train = Filter.useFilter(train, stringToWordVector);
+            }
 
         // Set the class index to the last attribute
         if (train.classIndex() == -1) {
@@ -46,7 +66,7 @@ public class FSSetaSMO {
         bestSMO.buildClassifier(train);
 
         // Modeloa itzuli
-        return bestSMO;
+        //return bestSMO;
     }
 }
 

@@ -54,8 +54,8 @@ public class iragarri {
 
     private static void iragarketakEgin(LinearRegression model, Instances RAWinstances) throws Exception {
 
-        //Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transformToBoW(RAWinstances);
-        //Instances NonSparseinstances = NonSparseBoW.getNonSparseBoW().transformToBoWNonSparse(BoWinstances);
+        Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transformToBoW(RAWinstances);
+        Instances NonSparseinstances = NonSparseBoW.getNonSparseBoW().transformToBoWNonSparse(BoWinstances);
         String outputFilePath = "src/emaitzak/iragarpena_LinearRegression.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
             // Escribir predicciones
@@ -107,7 +107,39 @@ public class iragarri {
     }
 
     private static void konprobatuDev() {
-        System.out.println("Konprobatu dev");
+        String devFolderPath = "dev/";
+        String outputArffPath = "src/emaitzak/dev_data.arff";
+
+        java.io.File devFolder = new java.io.File(devFolderPath);
+
+        if (!devFolder.exists() || !devFolder.isDirectory()) {
+            System.out.println("ERROREA: 'dev' karpeta ez da existitzen edo ez da direktorio bat.");
+            return;
+        }
+
+        try {
+            // Usar la clase ekorketa para convertir el directorio en un archivo .arff
+            ekorketa ekorketaInstance = ekorketa.getEkorketa();
+            Instances devInstances = ekorketaInstance.ekorketa(devFolderPath, outputArffPath);
+
+            if (devInstances == null) {
+                System.out.println("ERROREA: Ezin izan da 'dev' karpeta .arff bihurtu.");
+                return;
+            }
+
+            System.out.println("Archivo .arff generado correctamente: " + outputArffPath);
+
+            // Usar la clase NonSparseBoW para transformar las instancias
+            NonSparseBoW nonSparseBoW = NonSparseBoW.getNonSparseBoW();
+            String nonSparseOutputPath = "src/emaitzak/dev_data_nonSparse.arff";
+            Instances transformedInstances = nonSparseBoW.transform(devInstances, nonSparseOutputPath);
+
+            System.out.println("NonSparseBoW instances created and saved to: " + nonSparseOutputPath);
+
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da 'dev' karpeta prozesatu.");
+            e.printStackTrace();
+        }
     }
 
     private static Instances loadData(String dataSource) {
