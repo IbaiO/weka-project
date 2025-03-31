@@ -119,7 +119,7 @@ public class iragarri {
 
         // Ensure class index is set
         if (devSet.classIndex() == -1) {
-            devSet.setClassIndex(devSet.numAttributes() - 1);
+            devSet.setClassIndex(1);
         }
 
         // Preprocess the dev set to ensure consistency with the training set
@@ -183,10 +183,11 @@ public class iragarri {
         try {
             // Apply StringToWordVector filter if there are string attributes
             boolean hasStringAttributes = false;
+            System.out.println("Checking for string attributes in dev set...");
             for (int i = 0; i < devSet.numAttributes(); i++) {
                 if (devSet.attribute(i).isString()) {
+                    System.out.println("String attribute found: " + devSet.attribute(i).name());
                     hasStringAttributes = true;
-                    break;
                 }
             }
 
@@ -194,10 +195,11 @@ public class iragarri {
                 StringToWordVector stringToWordVector = new StringToWordVector();
                 stringToWordVector.setInputFormat(devSet);
                 devSet = Filter.useFilter(devSet, stringToWordVector);
+                System.out.println("StringToWordVector filter applied to dev set.");
             }
 
             // Ensure class index is set after preprocessing
-            devSet.setClassIndex(devSet.numAttributes() - 1);
+            devSet.setClassIndex(0);
 
             return devSet;
         } catch (Exception e) {
