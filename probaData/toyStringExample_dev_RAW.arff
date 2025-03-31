@@ -1,0 +1,14 @@
+@relation simple
+
+@attribute klasea {Pos, Neg}
+@attribute testua string
+
+@data
+Neg, "this is an error"
+Pos, "this is not an error"
+Neg, "this is a bad"
+Pos, "an error is not this"
+Pos, "this is"
+Pos, "a this is an"
+Neg, "an error is this"
+Neg, "a this is bad"

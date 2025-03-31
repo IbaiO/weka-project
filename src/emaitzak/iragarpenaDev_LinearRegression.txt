@@ -1,0 +1,11 @@
+Predictions for dev set:
+1. instantzia: Predicted=Pos, True=Pos
+2. instantzia: Predicted=Pos, True=Pos
+3. instantzia: Predicted=Pos, True=Pos
+4. instantzia: Predicted=Pos, True=Pos
+5. instantzia: Predicted=Pos, True=Pos
+6. instantzia: Predicted=Pos, True=Pos
+7. instantzia: Predicted=Pos, True=Pos
+8. instantzia: Predicted=Pos, True=Pos
+
+Accuracy: 100,00%
