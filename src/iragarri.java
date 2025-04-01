@@ -14,8 +14,8 @@ import java.io.IOException;
 public class iragarri {
     public static void main(String[] args) throws Exception {
         // Entrenamiento y prueba (inputs manuales)
-        String trainSource = "probaData/toyStringExample_train_RAW.arff";
-        String testSource = "probaData/toyStringExample_test_RAW.arff";
+        String trainSource = "MiPollaBoW.arff";
+        String testSource = "MiPolla2BoW.arff";
 
         // Cargar conjuntos de datos
         Instances trainSet = loadData(trainSource);
@@ -27,12 +27,8 @@ public class iragarri {
         }
 
         // Configurar índice de clase
-        if (trainSet.classIndex() == -1) {
-            trainSet.setClassIndex(trainSet.numAttributes() - 1);
-        }
-        if (testSet.classIndex() == -1) {
-            testSet.setClassIndex(testSet.numAttributes() - 1);
-        }
+        trainSet.setClassIndex(trainSet.numAttributes() - 1);
+        testSet.setClassIndex(testSet.numAttributes() - 1);
 
         // Crear modelo de regresión lineal
         LinearRegression modelLR = linearRegression.main(trainSet);

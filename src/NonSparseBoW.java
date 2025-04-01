@@ -8,6 +8,7 @@ import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 import weka.filters.unsupervised.instance.SparseToNonSparse;
@@ -86,14 +87,16 @@ public class NonSparseBoW {
     }
 
     public Instances transformToBoW(Instances data) {
+        int[] probatxoa = {0};
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
         filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
-        filter.setAttributeIndices("first-last"); // Atributu guztiei aplikatu
-        filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
-        filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
+        filter.setAttributeIndicesArray(probatxoa); // Apply to all string attributes
+        // filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
+        // filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
 
         try {
+            data.setClassIndex(data.numAttributes() - 1); // Klase atributua azkena izan behar da
             filter.setInputFormat(data);
             Instances newData = Filter.useFilter(data, filter);
             return newData;
@@ -131,5 +134,22 @@ public class NonSparseBoW {
             System.out.println("ERROREA: Ezin izan da BoW datuak gorde.");
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        // Data
+        try {
+            DataSource ds = new DataSource("MiPolla2.arff");
+            Instances data = ds.getDataSet();
+            data.setClassIndex(data.numAttributes() - 1); // Klase atributua azkena izan behar da
+
+            String outputFile = "MiPolla2.model"; // Sartu hemen zure datu multzoaren irteera
+            NonSparseBoW.getNonSparseBoW().transform(data, outputFile);
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da datu multzoa irakurri.");
+            e.printStackTrace();
+            return;
+        }
+
     }
 }
