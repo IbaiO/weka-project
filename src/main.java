@@ -6,21 +6,23 @@ import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 
 @SuppressWarnings("all")
-public class src {
+public class main {
     public static void main(String[] args) {
         ///////////// HASIERAKETAK /////////////
         if (args.length != 2) {
-            System.out.println("Erabilera: java -jar weka-project.jar <input karpetaren path-a> <output fitxategiaren izena>");
+            System.out.println("Erabilera: java -jar weka-project.jar <input karpetaren path-a> <output extentzioa>");
             System.exit(0);
         }
         String inputPath = args[0]; System.out.println("Sarrerako fitxategia: " + inputPath);
         String outputFile = args[1]; System.out.println("Irteerako fitxategia: " + outputFile);
-        Instances instances = null;
+        Instances instances[] = null;
 
         ///////////// PROCESAMENDUA /////////////
-        instances = ekorketa.getEkorketa().ekorketa(inputPath, outputFile);
-        instances.setClassIndex(instances.numAttributes() - 1);
-        Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transform(instances, outputFile);
+        instances = datuBilketa.getDB().bildu(inputPath, outputFile);
+        Instances instancesTrain = instances[0]; instancesTrain.setClassIndex(instancesTrain.numAttributes() - 1);
+        Instances instancesDev = instances[1]; instancesDev.setClassIndex(instancesDev.numAttributes() - 1);
+        Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transform(instancesTrain, outputFile);
+        Instances BoWinstancesDev = NonSparseBoW.getNonSparseBoW().transform(instancesDev, outputFile);
         // bostgarren laborategia
         // SMO algoritmoa
         // Linear regression algoritmoa        

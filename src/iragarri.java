@@ -218,8 +218,7 @@ public class iragarri {
 
         try {
             // Usar la clase ekorketa para convertir el directorio en un archivo .arff
-            ekorketa ekorketaInstance = ekorketa.getEkorketa();
-            Instances devInstances = ekorketaInstance.ekorketa(devFolderPath, outputArffPath);
+            Instances devInstances = datuBilketa.getDB().bildu(devFolderPath, outputArffPath)[1];
 
             if (devInstances == null) {
                 System.out.println("ERROREA: Ezin izan da 'dev' karpeta .arff bihurtu.");
