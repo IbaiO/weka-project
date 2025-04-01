@@ -1,6 +1,8 @@
 package src;
 
+import weka.classifiers.Classifier;
 import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.functions.SMO;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -35,6 +37,9 @@ public class iragarri {
 
         // Crear modelo de regresión lineal
         LinearRegression modelLR = linearRegression.main(trainSet);
+        SMO[] modelSMO = sMO.main(trainSet);
+        SMO modelSMO1 = modelSMO[0];
+        SMO modelSMO2 = modelSMO[1];
         if (modelLR != null) {
             // Preprocesar el conjunto de prueba
             Instances processedTestSet = preprocessTestData(testSet, trainSet);
@@ -43,38 +48,92 @@ public class iragarri {
                 return;
             }
 
+         
             // Realizar predicciones
-            iragarketakEgin(modelLR, processedTestSet);
+            iragarketakEgin(modelLR, processedTestSet, "lineal");
+        }
+        
+        if (modelSMO != null) {
+            // Preprocesar el conjunto de prueba
+            Instances processedTestSet = preprocessTestData(testSet, trainSet);
+            if (processedTestSet == null) {
+                System.out.println("Errorea: Ezin izan da test datuak aurreprozesatu.");
+                return;
+            }
+
+            // Realizar predicciones
+            iragarketakEgin(modelSMO1, processedTestSet, "SMO1");
+            iragarketakEgin(modelSMO2, processedTestSet, "SMO2");
         }
 
         // Método de depuración
         //eraikiDev();
-        ebaluatuDev(modelLR, "probaData/toyStringExample_dev_RAW.arff");
+        //ebaluatuDev(modelLR, "probaData/toyStringExample_dev_RAW.arff");
     }
 
-    private static void iragarketakEgin(LinearRegression model, Instances RAWinstances) throws Exception {
+    private static void iragarketakEgin(Classifier model, Instances RAWinstances, String modelType) throws Exception {
 
         //Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transformToBoW(RAWinstances);
         //Instances NonSparseinstances = NonSparseBoW.getNonSparseBoW().transformToBoWNonSparse(BoWinstances);
-        String outputFilePath = "src/emaitzak/iragarpena_LinearRegression.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
-            // Escribir predicciones
-            for (int i = 0; i < RAWinstances.numInstances(); i++) {
-                Instance instance = RAWinstances.instance(i);
-                double prediction = model.classifyInstance(instance);
-                boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
-
-
-                // Escribir línea formateada
-                writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
-            }
-            System.out.println("Predictions saved to: " + outputFilePath);
-        } catch (IOException e) {
-            System.out.println("ERROREA: Ezin izan da iragarpenak fitxategian gorde.");
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
-            e.printStackTrace();
+        if (modelType.equals("lineal")) {
+            String outputFilePath = "src/emaitzak/iragarpena_LinearRegression.txt";
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+                // Escribir predicciones
+                for (int i = 0; i < RAWinstances.numInstances(); i++) {
+                    Instance instance = RAWinstances.instance(i);
+                    double prediction = model.classifyInstance(instance);
+                    boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
+    
+    
+                    // Escribir línea formateada
+                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                }
+                System.out.println("Predictions saved to: " + outputFilePath);
+            } catch (IOException e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenak fitxategian gorde.");
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
+                e.printStackTrace();
+            }        
+        } else if (modelType.equals("SMO1")) {
+            String outputFilePath = "src/emaitzak/iragarpena_SMO1.txt";
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+                // Escribir predicciones
+                for (int i = 0; i < RAWinstances.numInstances(); i++) {
+                    Instance instance = RAWinstances.instance(i);
+                    double prediction = model.classifyInstance(instance);
+                    boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
+                    // Escribir línea formateada
+                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                }
+                System.out.println("Predictions saved to: " + outputFilePath);
+            } catch (IOException e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenak fitxategian gorde.");
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
+                e.printStackTrace();
+            }     
+        } else if (modelType.equals("SMO2")) {
+            String outputFilePath = "src/emaitzak/iragarpena_SMO2.txt";
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+                // Escribir predicciones
+                for (int i = 0; i < RAWinstances.numInstances(); i++) {
+                    Instance instance = RAWinstances.instance(i);
+                    double prediction = model.classifyInstance(instance);
+                    boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
+                    // Escribir línea formateada
+                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                }
+                System.out.println("Predictions saved to: " + outputFilePath);
+            } catch (IOException e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenak fitxategian gorde.");
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
+                e.printStackTrace();
+            }     
         }
     }
 
@@ -84,6 +143,11 @@ public class iragarri {
             StringToWordVector stringToWordVector = new StringToWordVector();
             stringToWordVector.setInputFormat(trainSet); // Usar el formato del conjunto de entrenamiento
             Instances processedTestSet = Filter.useFilter(testSet, stringToWordVector);
+
+            // Manejar valores faltantes
+            weka.filters.unsupervised.attribute.ReplaceMissingValues replaceMissingValues = new weka.filters.unsupervised.attribute.ReplaceMissingValues();
+            replaceMissingValues.setInputFormat(processedTestSet);
+            processedTestSet = Filter.useFilter(processedTestSet, replaceMissingValues);
 
             // Configurar índice de clase
             processedTestSet.setClassIndex(processedTestSet.numAttributes() - 1);

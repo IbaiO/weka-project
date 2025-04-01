@@ -1,72 +1,169 @@
 package src;
 
 import weka.classifiers.functions.SMO;
-import weka.classifiers.meta.CVParameterSelection;
+import weka.classifiers.Evaluation;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class sMO {
 
-    public static SMO main(Instances data) throws Exception {
-
-        // Load the training data
-        Instances train = data;
+    public static SMO[] main(Instances dataset) throws Exception {
+        // Cargar los datos de entrenamiento
+        Instances train = dataset;
         if (train == null) {
             System.out.println("Error: Unable to load training data.");
             return null;
         }
-        
-        // Check if there are string attributes
-        boolean hasStringAttributes = false;
-        for (int i = 0; i < train.numAttributes(); i++) {
-            if (train.attribute(i).isString()) {
+
+        // Preprocesar los datos si contienen atributos de texto
+        dataset = preprocessData(train);
+
+        // Configurar índice de clase
+        if (train.classIndex() == -1) {
+            train.setClassIndex(train.numAttributes() - 1);
+        }
+
+        // Comparar diferentes kernels y optimizar C
+        System.out.println("Evaluating PolyKernel...");
+        SMO polyKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.PolyKernel(), 2);
+
+        System.out.println("Evaluating RBFKernel...");
+        SMO rbfKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.RBFKernel(), 0.01);
+
+
+        // Crear un arreglo para almacenar los modelos evaluados
+        SMO[] models = {polyKernelModel, rbfKernelModel};
+
+        // Devolver ambos modelos
+        return models;
+    }
+
+    private static SMO evaluateKernel(Instances train, weka.classifiers.functions.supportVector.Kernel kernel, double kernelParam) throws Exception {
+        double[] cValues = {0.1, 1, 10, 100}; // Valores de C a probar
+        double bestAccuracy = 0;
+        double bestC = 0;
+        SMO bestModel = null;
+
+        for (double c : cValues) {
+            // Crear el clasificador SMO
+            SMO smo = new SMO();
+            smo.setKernel(kernel);
+            smo.setC(c);
+
+            // Configurar parámetros específicos del kernel
+            if (kernel instanceof weka.classifiers.functions.supportVector.PolyKernel) {
+                ((weka.classifiers.functions.supportVector.PolyKernel) kernel).setExponent((int) kernelParam);
+            } else if (kernel instanceof weka.classifiers.functions.supportVector.RBFKernel) {
+                ((weka.classifiers.functions.supportVector.RBFKernel) kernel).setGamma(kernelParam);
+            }
+
+            // Evaluar el modelo con validación cruzada
+            Evaluation eval = new Evaluation(train);
+            eval.crossValidateModel(smo, train, 10, new Random(1)); // 10-fold cross-validation
+
+            // Imprimir resultados
+            System.out.println("Kernel: " + kernel.getClass().getSimpleName());
+            System.out.println("C: " + c);
+            System.out.println("Accuracy: " + eval.pctCorrect() + "%");
+            System.out.println("====================================");
+
+            // Actualizar el mejor modelo si la precisión mejora
+            if (eval.pctCorrect() > bestAccuracy) {
+                bestAccuracy = eval.pctCorrect();
+                bestC = c;
+                bestModel = smo;
+            }
+        }
+
+        // Entrenar el mejor modelo con el conjunto de entrenamiento completo
+        if (bestModel != null) {
+            bestModel.buildClassifier(train);
+        }
+
+        // Imprimir el mejor valor de C
+        System.out.println("Best C for " + kernel.getClass().getSimpleName() + ": " + bestC);
+        System.out.println("Best Accuracy: " + bestAccuracy + "%");
+        System.out.println("====================================");
+
+        // Retornar el mejor modelo con el mejor valor de C
+        return bestModel;
+    }
+
+
+    private static Instances preprocessData(Instances dataset) {
+        try {
+            // StringToWordVector iragazkia aplikatu, behar izanez gero.
+            boolean hasStringAttributes = false;
+            for (int i = 0; i < dataset.numAttributes(); i++) {
+                if (dataset.attribute(i).isString()) {
                     hasStringAttributes = true;
                     break;
                 }
             }
 
             if (hasStringAttributes) {
-                // Apply StringToWordVector filter
                 StringToWordVector stringToWordVector = new StringToWordVector();
-                stringToWordVector.setInputFormat(train);
-                train = Filter.useFilter(train, stringToWordVector);
+                stringToWordVector.setInputFormat(dataset);
+                dataset = Filter.useFilter(dataset, stringToWordVector);
             }
 
-        // Set the class index to the last attribute
-        if (train.classIndex() == -1) {
-            train.setClassIndex(train.numAttributes() - 1);
+            // Atributu bitar nominalak zenbakizkotan bihurtu
+            if (dataset.classIndex() != -1) {
+                int classIndex = dataset.classIndex();
+                if (dataset.attribute(classIndex).isNominal() && dataset.attribute(classIndex).numValues() == 2) {
+                    // Atributu zerrenda bat sortu, DataSet berriarentzat
+                    ArrayList<Attribute> attributes = new ArrayList<>();
+                    for (int i = 0; i < dataset.numAttributes(); i++) {
+                        if (i == classIndex) {
+                            // Reemplazar el atributo de clase nominal con un atributo numérico
+                            attributes.add(new Attribute("class"));
+                        } else {
+                            attributes.add(dataset.attribute(i));
+                        }
+                    }
+
+                    // DataSet berria sortu Pos/Neg klasea zenbaki gisa jarrita
+                    // Pos: 1, Neg: 0
+                    Instances newDataset = new Instances(dataset.relationName(), attributes, dataset.numInstances());
+                    newDataset.setClassIndex(classIndex);
+
+                    // Instantziak DataSet berrira gehitu
+                    for (int i = 0; i < dataset.numInstances(); i++) {
+                        DenseInstance newInstance = new DenseInstance(newDataset.numAttributes());
+                        newInstance.setDataset(newDataset);
+
+                        for (int j = 0; j < dataset.numAttributes(); j++) {
+                            if (j == classIndex) {
+                                String classValue = dataset.instance(i).stringValue(classIndex);
+                                if (classValue.equalsIgnoreCase("pos")) {
+                                    newInstance.setValue(classIndex, 1);
+                                } else if (classValue.equalsIgnoreCase("neg")) {
+                                    newInstance.setValue(classIndex, 0);
+                                }
+                            } else {
+                                newInstance.setValue(j, dataset.instance(i).value(j));
+                            }
+                        }
+
+                        newDataset.add(newInstance);
+                    }
+
+                    dataset = newDataset;
+                }
+            }
+
+            return dataset;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
+            e.printStackTrace();
+            return null;
         }
-
-        System.out.println("Total number of attributes: " + train.numAttributes());
-
-        // Find the best parameters for the SMO classifier using CVParameterSelection
-        CVParameterSelection cvParamSelection = new CVParameterSelection();
-        cvParamSelection.setClassifier(new SMO());
-        
-        // Select the parameters to optimize
-        cvParamSelection.addCVParameter("C 0.1 2.0 10"); // Probar valores de C entre 0.1 y 2.0 en 10 pasos
-        cvParamSelection.addCVParameter("K \"weka.classifiers.functions.supportVector.PolyKernel -E 1\" \"weka.classifiers.functions.supportVector.RBFKernel -G 0.01\""); // Probar diferentes kernels
-        cvParamSelection.addCVParameter("E 1 3 3"); // Probar grados del kernel polinómico entre 1 y 3
-        cvParamSelection.addCVParameter("G 0.01 1.0 5"); // Probar valores de gamma entre 0.01 y 1.0 en 5 pasos
-        cvParamSelection.addCVParameter("L 0.001 0.1 5"); // Probar tolerancia entre 0.001 y 0.1 en 5 pasos
-
-        // Search for the best parameters
-        cvParamSelection.buildClassifier(train);
-
-        // Lortu aurkitutako parametro onenak
-        String bestOptions = cvParamSelection.toString();
-        System.out.println("Best parameters found: " + bestOptions);
-
-        // SMO modeloa sortu aurkitutako parametro onenekin
-        SMO bestSMO = new SMO();
-        bestSMO.setOptions(weka.core.Utils.splitOptions(bestOptions));
-
-        // Train the SMO model with the training data
-        bestSMO.buildClassifier(train);
-
-        // Modeloa itzuli
-        return bestSMO;
     }
 }
 
