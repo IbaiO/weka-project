@@ -29,14 +29,6 @@ public class linearRegression {
         }
 
         return model;
-        /* 
-        // Klaseak aurreikusi.
-        for (int i = 0; i < dataset.numInstances(); i++) {
-            double predictedClass = model.classifyInstance(dataset.instance(i));
-            String predictedLabel = dataset.classAttribute().value((int) predictedClass);
-            System.out.println(i + ". instantzia: Aurreikusitako klasea = " + predictedLabel);
-        }
-        */
     }
 
     private static Instances preprocessData(Instances dataset) {
@@ -60,7 +52,7 @@ public class linearRegression {
             if (dataset.classIndex() != -1) {
                 int classIndex = dataset.classIndex();
                 if (dataset.attribute(classIndex).isNominal() && dataset.attribute(classIndex).numValues() == 2) {
-                    // Crear una lista de atributos para el nuevo conjunto de datos
+                    // Atributu zerrenda bat sortu, DataSet berriarentzat
                     ArrayList<Attribute> attributes = new ArrayList<>();
                     for (int i = 0; i < dataset.numAttributes(); i++) {
                         if (i == classIndex) {
@@ -71,11 +63,12 @@ public class linearRegression {
                         }
                     }
 
-                    // Crear un nuevo conjunto de datos con los atributos actualizados
+                    // DataSet berria sortu Pos/Neg klasea zenbaki gisa jarrita
+                    // Pos: 1, Neg: 0
                     Instances newDataset = new Instances(dataset.relationName(), attributes, dataset.numInstances());
                     newDataset.setClassIndex(classIndex);
 
-                    // Copiar las instancias al nuevo conjunto de datos
+                    // Instantziak DataSet berrira gehitu
                     for (int i = 0; i < dataset.numInstances(); i++) {
                         DenseInstance newInstance = new DenseInstance(newDataset.numAttributes());
                         newInstance.setDataset(newDataset);
