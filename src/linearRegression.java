@@ -1,33 +1,47 @@
 package src;
 
+import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.Instances;
 import weka.classifiers.functions.LinearRegression;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
+import java.util.ArrayList;
+
 public class linearRegression {
     public static LinearRegression main(Instances dataset) throws Exception {
-        /*
-        String dataSource = args[0];
+        // Klasearen indizea ezarri.
+        dataset.setClassIndex(dataset.numAttributes() - 1);
 
-        Instances dataset = loadData(dataSource);
+        // Datuak prozesatu.
+        dataset = preprocessData(dataset);
         if (dataset == null) {
-            System.out.println("Mesedez, egiaztatu helbidea ondo sartu duzula.");
+            System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
             return null;
         }
-        */
-        dataset.setClassIndex(dataset.numAttributes() - 1);
-        dataset = preprocessData(dataset);
 
+        // Modeloa eraiki.
         LinearRegression model = buildModel(dataset);
-        if (model != null)
-            return model;
-        return null;
+        if (model == null) {
+            System.out.println("ERROREA: Ezin izan da modeloa eraiki.");
+            return null;
+        }
+
+        return model;
+        /* 
+        // Klaseak aurreikusi.
+        for (int i = 0; i < dataset.numInstances(); i++) {
+            double predictedClass = model.classifyInstance(dataset.instance(i));
+            String predictedLabel = dataset.classAttribute().value((int) predictedClass);
+            System.out.println(i + ". instantzia: Aurreikusitako klasea = " + predictedLabel);
+        }
+        */
     }
 
     private static Instances preprocessData(Instances dataset) {
         try {
-            // Check if there are string attributes
+            // StringToWordVector iragazkia aplikatu, behar izanez gero.
             boolean hasStringAttributes = false;
             for (int i = 0; i < dataset.numAttributes(); i++) {
                 if (dataset.attribute(i).isString()) {
@@ -37,36 +51,58 @@ public class linearRegression {
             }
 
             if (hasStringAttributes) {
-                // Apply StringToWordVector filter
                 StringToWordVector stringToWordVector = new StringToWordVector();
                 stringToWordVector.setInputFormat(dataset);
                 dataset = Filter.useFilter(dataset, stringToWordVector);
             }
 
-            // Check if the class attribute is binary and nominal
+            // Atributu bitar nominalak zenbakizkotan bihurtu
             if (dataset.classIndex() != -1) {
                 int classIndex = dataset.classIndex();
                 if (dataset.attribute(classIndex).isNominal() && dataset.attribute(classIndex).numValues() == 2) {
-                    System.out.println("Binary class attribute detected. Converting it to numeric.");
-                    for (int i = 0; i < dataset.numInstances(); i++) {
-                        String classValue = dataset.instance(i).stringValue(classIndex);
-                        // Map binary class values to numeric (e.g., "yes" -> 1, "no" -> 0)
-                        if (classValue.equalsIgnoreCase("pos")) {
-                            dataset.instance(i).setValue(classIndex, 1);
-                        } else if (classValue.equalsIgnoreCase("neg")) {
-                            dataset.instance(i).setValue(classIndex, 0);
+                    // Crear una lista de atributos para el nuevo conjunto de datos
+                    ArrayList<Attribute> attributes = new ArrayList<>();
+                    for (int i = 0; i < dataset.numAttributes(); i++) {
+                        if (i == classIndex) {
+                            // Reemplazar el atributo de clase nominal con un atributo numérico
+                            attributes.add(new Attribute("class"));
                         } else {
-                            System.out.println("ERROREA: Klase balio ezezaguna aurkitu da: " + classValue);
-                            return null; // Return null if an unknown class value is found
+                            attributes.add(dataset.attribute(i));
                         }
                     }
+
+                    // Crear un nuevo conjunto de datos con los atributos actualizados
+                    Instances newDataset = new Instances(dataset.relationName(), attributes, dataset.numInstances());
+                    newDataset.setClassIndex(classIndex);
+
+                    // Copiar las instancias al nuevo conjunto de datos
+                    for (int i = 0; i < dataset.numInstances(); i++) {
+                        DenseInstance newInstance = new DenseInstance(newDataset.numAttributes());
+                        newInstance.setDataset(newDataset);
+
+                        for (int j = 0; j < dataset.numAttributes(); j++) {
+                            if (j == classIndex) {
+                                String classValue = dataset.instance(i).stringValue(classIndex);
+                                if (classValue.equalsIgnoreCase("pos")) {
+                                    newInstance.setValue(classIndex, 1);
+                                } else if (classValue.equalsIgnoreCase("neg")) {
+                                    newInstance.setValue(classIndex, 0);
+                                }
+                            } else {
+                                newInstance.setValue(j, dataset.instance(i).value(j));
+                            }
+                        }
+
+                        newDataset.add(newInstance);
+                    }
+
+                    dataset = newDataset;
                 }
             }
 
-            // Binary attributes are already numeric (0 or 1), so no additional processing is needed
             return dataset;
         } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da datuak aurreprozesatu.");
+            System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
             e.printStackTrace();
             return null;
         }
@@ -75,7 +111,6 @@ public class linearRegression {
     private static LinearRegression buildModel(Instances dataset) {
         try {
             LinearRegression model = new LinearRegression();
-            dataset.setClassIndex(dataset.numAttributes() - 1); // Set the class attribute
             model.buildClassifier(dataset);
             return model;
         } catch (Exception e) {

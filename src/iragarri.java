@@ -1,6 +1,8 @@
 package src;
 
 import weka.classifiers.functions.LinearRegression;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -10,16 +12,19 @@ import weka.filters.Filter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class iragarri {
     public static void main(String[] args) throws Exception {
         // Entrenamiento y prueba (inputs manuales)
         String trainSource = "MiPollaBoW.arff";
-        String testSource = "MiPolla2BoW.arff";
+        String testSource = "MiPollaBoW2.arff";
 
         // Cargar conjuntos de datos
         Instances trainSet = loadData(trainSource);
+        trainSet = preprocessData(trainSet);
         Instances testSet = loadData(testSource);
+        testSet = preprocessData(testSet);
 
         if (trainSet == null || testSet == null) {
             System.out.println("Errorea: Ezin izan da datu multzoak kargatu.");
@@ -61,20 +66,9 @@ public class iragarri {
                 double prediction = model.classifyInstance(instance);
                 boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
 
-                // Formatear atributos
-                StringBuilder attributes = new StringBuilder();
-                for (int j = 0; j < instance.numAttributes(); j++) {
-                    if (j != instance.classIndex()) { // Omitir el atributo de clase
-                        attributes.append(instance.value(j));
-                        if (j < instance.numAttributes() - 1) {
-                            attributes.append(", ");
-                        }
-                    }
-                }
 
                 // Escribir línea formateada
-                writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg") + 
-                             ", (" + attributes + ")\n");
+                writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
             }
             System.out.println("Predictions saved to: " + outputFilePath);
         } catch (IOException e) {
@@ -246,6 +240,75 @@ public class iragarri {
             return source.getDataSet();
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da datu multzoa kargatu.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Instances preprocessData(Instances dataset) {
+        try {
+            // StringToWordVector iragazkia aplikatu, behar izanez gero.
+            boolean hasStringAttributes = false;
+            for (int i = 0; i < dataset.numAttributes(); i++) {
+                if (dataset.attribute(i).isString()) {
+                    hasStringAttributes = true;
+                    break;
+                }
+            }
+
+            if (hasStringAttributes) {
+                StringToWordVector stringToWordVector = new StringToWordVector();
+                stringToWordVector.setInputFormat(dataset);
+                dataset = Filter.useFilter(dataset, stringToWordVector);
+            }
+
+            // Atributu bitar nominalak zenbakizkotan bihurtu
+            if (dataset.classIndex() != -1) {
+                int classIndex = dataset.classIndex();
+                if (dataset.attribute(classIndex).isNominal() && dataset.attribute(classIndex).numValues() == 2) {
+                    // Crear una lista de atributos para el nuevo conjunto de datos
+                    ArrayList<Attribute> attributes = new ArrayList<>();
+                    for (int i = 0; i < dataset.numAttributes(); i++) {
+                        if (i == classIndex) {
+                            // Reemplazar el atributo de clase nominal con un atributo numérico
+                            attributes.add(new Attribute("class"));
+                        } else {
+                            attributes.add(dataset.attribute(i));
+                        }
+                    }
+
+                    // Crear un nuevo conjunto de datos con los atributos actualizados
+                    Instances newDataset = new Instances(dataset.relationName(), attributes, dataset.numInstances());
+                    newDataset.setClassIndex(classIndex);
+
+                    // Copiar las instancias al nuevo conjunto de datos
+                    for (int i = 0; i < dataset.numInstances(); i++) {
+                        DenseInstance newInstance = new DenseInstance(newDataset.numAttributes());
+                        newInstance.setDataset(newDataset);
+
+                        for (int j = 0; j < dataset.numAttributes(); j++) {
+                            if (j == classIndex) {
+                                String classValue = dataset.instance(i).stringValue(classIndex);
+                                if (classValue.equalsIgnoreCase("pos")) {
+                                    newInstance.setValue(classIndex, 1);
+                                } else if (classValue.equalsIgnoreCase("neg")) {
+                                    newInstance.setValue(classIndex, 0);
+                                }
+                            } else {
+                                newInstance.setValue(j, dataset.instance(i).value(j));
+                            }
+                        }
+
+                        newDataset.add(newInstance);
+                    }
+
+                    dataset = newDataset;
+                }
+            }
+
+            return dataset;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
             e.printStackTrace();
             return null;
         }
