@@ -7,7 +7,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class linearRegression {
     public static LinearRegression main(Instances dataset) throws Exception {
-        /* 
+        /*
         String dataSource = args[0];
 
         Instances dataset = loadData(dataSource);
@@ -17,10 +17,8 @@ public class linearRegression {
         }
         */
         dataset = preprocessData(dataset);
-        if (dataset.classIndex() == -1) {
-            dataset.setClassIndex(dataset.numAttributes() - 1);
-        }
-    
+        dataset.setClassIndex(dataset.numAttributes() - 1);
+
         LinearRegression model = buildModel(dataset);
         if (model != null)
             return model;
