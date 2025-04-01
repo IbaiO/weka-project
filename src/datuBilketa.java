@@ -25,7 +25,7 @@ public class datuBilketa {
 
     public Instances[] bildu(String inPath, String outFile) {
         Instances train = bilduTrain (inPath + "/train", outFile);
-        Instances dev = bilduTrain (inPath + "/dev", outFile);
+        Instances dev = bilduDev (inPath + "/dev", outFile);
         return new Instances[] {train, dev};        
     }
 
