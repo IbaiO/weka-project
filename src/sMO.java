@@ -49,41 +49,57 @@ public class sMO {
 
     private static SMO evaluateKernel(Instances train, weka.classifiers.functions.supportVector.Kernel kernel, double kernelParam) throws Exception {
         double[] cValues = {0.1, 1, 10, 100}; // Valores de C a probar
+        double[] gammaValues = {0.01, 0.1, 1}; // Valores de Gamma (para RBFKernel)
+        double[] exponentValues = {1, 2, 3}; // Valores de Exponent (para PolyKernel)
+        double[] omegaValues = {0.5, 1.0, 2.0}; // Valores de Omega (para PukKernel)
+        double[] sigmaValues = {0.5, 1.0, 2.0}; // Valores de Sigma (para PukKernel)
+
         double bestAccuracy = 0;
         double bestC = 0;
+        double bestKernelParam1 = 0; // Puede ser Gamma, Exponent, Omega, etc.
+        double bestKernelParam2 = 0; // Solo para PukKernel (Sigma)
         SMO bestModel = null;
 
         for (double c : cValues) {
-            // Crear el clasificador SMO
-            SMO smo = new SMO();
-            smo.setKernel(kernel);
-            smo.setC(c);
+            for (double param1 : (kernel instanceof weka.classifiers.functions.supportVector.RBFKernel ? gammaValues :
+                                  kernel instanceof weka.classifiers.functions.supportVector.PolyKernel ? exponentValues :
+                                  kernel instanceof weka.classifiers.functions.supportVector.Puk ? omegaValues : new double[]{kernelParam})) {
+                for (double param2 : (kernel instanceof weka.classifiers.functions.supportVector.Puk ? sigmaValues : new double[]{1.0})) {
+                    // Crear el clasificador SMO
+                    SMO smo = new SMO();
+                    smo.setKernel(kernel);
+                    smo.setC(c);
 
-            // Configurar parámetros específicos del kernel
-            if (kernel instanceof weka.classifiers.functions.supportVector.PolyKernel) {
-                ((weka.classifiers.functions.supportVector.PolyKernel) kernel).setExponent((int) kernelParam);
-            } else if (kernel instanceof weka.classifiers.functions.supportVector.RBFKernel) {
-                ((weka.classifiers.functions.supportVector.RBFKernel) kernel).setGamma(kernelParam);
-            } else if (kernel instanceof weka.classifiers.functions.supportVector.Puk) {
-                ((weka.classifiers.functions.supportVector.Puk) kernel).setOmega(kernelParam); // Configurar Omega
-                ((weka.classifiers.functions.supportVector.Puk) kernel).setSigma(1.0); // Configurar Sigma (puedes ajustar este valor)
-            }
+                    // Configurar parámetros específicos del kernel
+                    if (kernel instanceof weka.classifiers.functions.supportVector.PolyKernel) {
+                        ((weka.classifiers.functions.supportVector.PolyKernel) kernel).setExponent((int) param1);
+                    } else if (kernel instanceof weka.classifiers.functions.supportVector.RBFKernel) {
+                        ((weka.classifiers.functions.supportVector.RBFKernel) kernel).setGamma(param1);
+                    } else if (kernel instanceof weka.classifiers.functions.supportVector.Puk) {
+                        ((weka.classifiers.functions.supportVector.Puk) kernel).setOmega(param1);
+                        ((weka.classifiers.functions.supportVector.Puk) kernel).setSigma(param2);
+                    }
 
-            // Evaluar el modelo con validación cruzada
-            Evaluation eval = new Evaluation(train);
-            eval.crossValidateModel(smo, train, 10, new Random(1)); // 10-fold cross-validation
+                    // Evaluar el modelo con validación cruzada
+                    Evaluation eval = new Evaluation(train);
+                    eval.crossValidateModel(smo, train, 10, new Random(1)); // 10-fold cross-validation
 
-            // Imprimir resultados
-            System.out.println("Kernel: " + kernel.getClass().getSimpleName());
-            System.out.println("C: " + c);
-            System.out.println("Accuracy: " + eval.pctCorrect() + "%");
-            System.out.println("====================================");
+                    // Imprimir resultados
+                    System.out.println("Kernel: " + kernel.getClass().getSimpleName());
+                    System.out.println("C: " + c);
+                    System.out.println("Param1: " + param1 + (kernel instanceof weka.classifiers.functions.supportVector.Puk ? ", Param2: " + param2 : ""));
+                    System.out.println("Accuracy: " + eval.pctCorrect() + "%");
+                    System.out.println("====================================");
 
-            // Actualizar el mejor modelo si la precisión mejora
-            if (eval.pctCorrect() > bestAccuracy) {
-                bestAccuracy = eval.pctCorrect();
-                bestC = c;
-                bestModel = smo;
+                    // Actualizar el mejor modelo si la precisión mejora
+                    if (eval.pctCorrect() > bestAccuracy) {
+                        bestAccuracy = eval.pctCorrect();
+                        bestC = c;
+                        bestKernelParam1 = param1;
+                        bestKernelParam2 = param2;
+                        bestModel = smo;
+                    }
+                }
             }
         }
 
@@ -92,15 +108,15 @@ public class sMO {
             bestModel.buildClassifier(train);
         }
 
-        // Imprimir el mejor valor de C
+        // Imprimir el mejor valor de parámetros
         System.out.println("Best C for " + kernel.getClass().getSimpleName() + ": " + bestC);
+        System.out.println("Best Param1: " + bestKernelParam1 + (kernel instanceof weka.classifiers.functions.supportVector.Puk ? ", Best Param2: " + bestKernelParam2 : ""));
         System.out.println("Best Accuracy: " + bestAccuracy + "%");
         System.out.println("====================================");
 
-        // Retornar el mejor modelo con el mejor valor de C
+        // Retornar el mejor modelo con los mejores parámetros
         return bestModel;
     }
-
 
     private static Instances preprocessData(Instances dataset) {
         try {
