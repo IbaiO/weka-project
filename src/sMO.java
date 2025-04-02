@@ -31,14 +31,17 @@ public class sMO {
 
         // Comparar diferentes kernels y optimizar C
         System.out.println("Evaluating PolyKernel...");
-        SMO polyKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.PolyKernel(), 2);
+        SMO polyKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.PolyKernel(), 2); // E = 2
 
         System.out.println("Evaluating RBFKernel...");
-        SMO rbfKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.RBFKernel(), 0.01);
+        SMO rbfKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.RBFKernel(), 0.01); // Gamma = 0.1
+
+        System.out.println("Evaluating PukKernel...");
+        SMO pukKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.Puk(), 1.0); // Omega = 1.0
 
 
         // Crear un arreglo para almacenar los modelos evaluados
-        SMO[] models = {polyKernelModel, rbfKernelModel};
+        SMO[] models = {polyKernelModel, rbfKernelModel, pukKernelModel};
 
         // Devolver ambos modelos
         return models;
@@ -61,6 +64,9 @@ public class sMO {
                 ((weka.classifiers.functions.supportVector.PolyKernel) kernel).setExponent((int) kernelParam);
             } else if (kernel instanceof weka.classifiers.functions.supportVector.RBFKernel) {
                 ((weka.classifiers.functions.supportVector.RBFKernel) kernel).setGamma(kernelParam);
+            } else if (kernel instanceof weka.classifiers.functions.supportVector.Puk) {
+                ((weka.classifiers.functions.supportVector.Puk) kernel).setOmega(kernelParam); // Configurar Omega
+                ((weka.classifiers.functions.supportVector.Puk) kernel).setSigma(1.0); // Configurar Sigma (puedes ajustar este valor)
             }
 
             // Evaluar el modelo con validación cruzada

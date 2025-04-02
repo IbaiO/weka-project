@@ -40,6 +40,7 @@ public class iragarri {
         SMO[] modelSMO = sMO.main(trainSet);
         SMO modelSMO1 = modelSMO[0];
         SMO modelSMO2 = modelSMO[1];
+        SMO modelSMO3 = modelSMO[2];
         if (modelLR != null) {
             // Preprocesar el conjunto de prueba
             Instances processedTestSet = preprocessTestData(testSet, trainSet);
@@ -52,7 +53,7 @@ public class iragarri {
             // Realizar predicciones
             iragarketakEgin(modelLR, processedTestSet, "lineal");
         }
-        
+
         if (modelSMO != null) {
             // Preprocesar el conjunto de prueba
             Instances processedTestSet = preprocessTestData(testSet, trainSet);
@@ -64,6 +65,7 @@ public class iragarri {
             // Realizar predicciones
             iragarketakEgin(modelSMO1, processedTestSet, "SMO1");
             iragarketakEgin(modelSMO2, processedTestSet, "SMO2");
+            iragarketakEgin(modelSMO3, processedTestSet, "SMO3");
         }
 
         // Método de depuración
@@ -97,7 +99,7 @@ public class iragarri {
                 e.printStackTrace();
             }        
         } else if (modelType.equals("SMO1")) {
-            String outputFilePath = "src/emaitzak/iragarpena_SMO1.txt";
+            String outputFilePath = "src/emaitzak/iragarpena_SMO_PolyKernel.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
                 // Escribir predicciones
                 for (int i = 0; i < RAWinstances.numInstances(); i++) {
@@ -116,7 +118,26 @@ public class iragarri {
                 e.printStackTrace();
             }     
         } else if (modelType.equals("SMO2")) {
-            String outputFilePath = "src/emaitzak/iragarpena_SMO2.txt";
+            String outputFilePath = "src/emaitzak/iragarpena_SMO_RBFKernel.txt";
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+                // Escribir predicciones
+                for (int i = 0; i < RAWinstances.numInstances(); i++) {
+                    Instance instance = RAWinstances.instance(i);
+                    double prediction = model.classifyInstance(instance);
+                    boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
+                    // Escribir línea formateada
+                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                }
+                System.out.println("Predictions saved to: " + outputFilePath);
+            } catch (IOException e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenak fitxategian gorde.");
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
+                e.printStackTrace();
+            }     
+        } else if (modelType.equals("SMO3")) {
+            String outputFilePath = "src/emaitzak/iragarpena_SMO_PukKernel.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
                 // Escribir predicciones
                 for (int i = 0; i < RAWinstances.numInstances(); i++) {
