@@ -25,7 +25,7 @@ public class datuBilketa {
 
     public Instances[] bildu(String inPath, String outFile) {
         // Sarrerako datuak irakurri
-        Instances train = bilduTrain (inPath + "/train", outFile);
+        Instances train = datuakBildu(inPath + "/train");
         save(train, outFile + "Train.arff"); // Gorde datuak
         // Aldatu BoW formatura
         Instances trainBoW = NonSparseBoW.getNonSparseBoW().transformTrain(train);
@@ -42,22 +42,22 @@ public class datuBilketa {
 
 
         // Ateratako atributuak Dev-ri pasatu
-        Instances dev = bilduDevTest (inPath + "/dev", attributes);
+        Instances dev = datuakBildu(inPath + "/dev");
         save(dev, outFile + "Dev.arff"); // Gorde datuak
-        Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev);
+        Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev, attributes);
         save(dev, outFile + "DevBoW.arff"); // Gorde datuak
 
 
         // Ateratako atributuak Test-ri pasatu
-        Instances test = bilduDevTest (inPath + "/test", attributes);
+        Instances test = datuakBildu(inPath + "/test");
         save(test, outFile + "Test.arff"); // Gorde datuak
-        Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test);
+        Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test, attributes);
         save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
         
         return new Instances[] {train, dev, test};        
     }
 
-    private Instances bilduTrain(String inPath, String outFile) {
+    private Instances datuakBildu(String inPath) {
         try {
             // Direktorioko karpetak irakurri
             File dir = new File(inPath);
@@ -115,73 +115,6 @@ public class datuBilketa {
         }
     }
 
-    private Instances bilduDevTest(String inPath, String[] attributes) {
-        try {
-            // Direktorioko karpetak irakurri
-            File dir = new File(inPath);
-            if (!dir.isDirectory()) {
-                throw new Exception("Emandako path-a ez da direktorio bat.");
-            }
-
-            // Karpetak (klasea) lortu
-            File[] classFolders = dir.listFiles(File::isDirectory);
-
-            // Atributuak sortu
-            ArrayList<Attribute> attributeList = new ArrayList<>();
-            for (String attribute : attributes) {
-                attributeList.add(new Attribute(attribute)); // Aurretik ateratako atributuak
-            }
-            attributeList.add(new Attribute("class", (List<String>) null)); // Klase atributua
-
-            // Datu multzoa sortu
-            Instances dataDevTest = new Instances("Dataset", attributeList, 0);
-            dataDevTest.setClassIndex(attributeList.size() - 1); // Azken atributua klasea da
-
-            // Karpetak zeharkatu eta instantziak gehitu
-            for (File folder : classFolders) {
-                File[] files = folder.listFiles(File::isFile);
-                if (files != null) {
-                    for (File file : files) {
-                        // Fitxategiaren edukia irakurri eta hitzak atera
-                        List<String> words = new ArrayList<>();
-                        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                // Hitzak atera (alfanumerikoak soilik)
-                                String[] tokens = line.split("\\W+");
-                                for (String token : tokens) {
-                                    if (!token.isEmpty()) {
-                                        words.add(token.toLowerCase()); // Hitzak minuskulaz
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Errorea fitxategia irakurtzean: " + file.getName());
-                            e.printStackTrace();
-                        }
-
-                        // Instantzia sortu eta datuak gehitu
-                        DenseInstance instance = new DenseInstance(attributeList.size());
-                        for (int i = 0; i < attributes.length; i++) {
-                            if (words.contains(attributes[i])) {
-                                instance.setValue(attributeList.get(i), 1.0); // Hitzaren presentzia
-                            } else {
-                                instance.setValue(attributeList.get(i), 0.0); // Hitzaren ez presentzia
-                            }
-                        }
-                        instance.setValue(attributeList.get(attributeList.size() - 1), folder.getName()); // Klasea
-                        dataDevTest.add(instance);
-                    }
-                }
-            }
-            return dataDevTest;
-        } catch (Exception e) {
-            System.out.println("Errorea: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     private void save(Instances attributes, String outFile) {
         try {
             // datuak karpeta eratu
@@ -203,7 +136,9 @@ public class datuBilketa {
     private void save(String[] data, String outFile) {
         try {
             FileWriter writer = new FileWriter("datuak/" + outFile);
-            writer.write(data + "\n");
+            for (int i = 0; i < data.length; i++) {
+                writer.write(data[i] + "\n");
+            }
             writer.close();
             System.out.println("Fitxategia .txt formatuan ongi sortu da hemen: " + outFile);
         } catch (Exception e) {
