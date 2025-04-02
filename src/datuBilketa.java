@@ -24,9 +24,30 @@ public class datuBilketa {
     }
 
     public Instances[] bildu(String inPath, String outFile) {
+        // Sarrerako datuak irakurri
         Instances train = bilduTrain (inPath + "/train", outFile);
-        Instances dev = bilduDev (inPath + "/dev", outFile);
-        return new Instances[] {train, dev};        
+        save(train, outFile + "Train.arff"); // Gorde datuak
+        // Aldatu BoW formatura
+        Instances trainBoW = NonSparseBoW.getNonSparseBoW().transformTrain(train);
+        save(trainBoW, outFile + "TrainBoW.arff"); // Gorde datuak
+        // Atera atributuak
+        String[] attributes = new String[trainBoW.numAttributes()];
+        for (int i = 0; i < trainBoW.numAttributes(); i++) {
+            attributes[i] = trainBoW.attribute(i).name();
+        }
+        // Aukeratutako atributuak gorde
+        save(attributes, outFile + "attributes.txt"); // Gorde datuak
+        // Ateratako atributuak Dev-ri pasatu
+        Instances dev = bilduDevTest (inPath + "/dev", attributes);
+        save(dev, outFile + "Dev.arff"); // Gorde datuak
+        Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev);
+        save(dev, outFile + "DevBoW.arff"); // Gorde datuak
+        // Ateratako atributuak Test-ri pasatu
+        Instances test = bilduDevTest (inPath + "/test", attributes);
+        save(test, outFile + "Test.arff"); // Gorde datuak
+        Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test);
+        save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
+        return new Instances[] {train, dev, test};        
     }
 
     private Instances bilduTrain(String inPath, String outFile) {
@@ -79,13 +100,6 @@ public class datuBilketa {
                 }
             }
 
-            // .arff fitxategia gorde
-            FileWriter writer = new FileWriter(outFile + "Train.arff");
-            writer.write(dataTrain.toString());
-            writer.close();
-
-            System.out.println("Fitxategia .arff formatuan ongi sortu da hemen: " + outFile + "Train.arff");
-
             return dataTrain;
         } catch (Exception e) {
             System.out.println("Errorea: " + e.getMessage());
@@ -94,7 +108,7 @@ public class datuBilketa {
         }
     }
 
-    private Instances bilduDev(String inPath, String outFile) {
+    private Instances bilduDevTest(String inPath, String[] attributes) {
         try {
             // Direktorioko karpetak irakurri
             File dir = new File(inPath);
@@ -105,30 +119,34 @@ public class datuBilketa {
             // Karpetak (klasea) lortu
             File[] classFolders = dir.listFiles(File::isDirectory);
 
-            // .arff fitxategirako atributuak sortu
-            ArrayList<Attribute> attributes = new ArrayList<>();
-            attributes.add(new Attribute("file_content", (List<String>) null)); // Fitxategiaren edukia
-            List<String> classValues = new ArrayList<>();
-            for (File folder : classFolders) {
-                classValues.add(folder.getName()); // Karpeten izenak klase bezala
+            // Atributuak sortu
+            ArrayList<Attribute> attributeList = new ArrayList<>();
+            for (String attribute : attributes) {
+                attributeList.add(new Attribute(attribute)); // Aurretik ateratako atributuak
             }
-            attributes.add(new Attribute("class", classValues)); // Klase atributua
+            attributeList.add(new Attribute("class", (List<String>) null)); // Klase atributua
 
             // Datu multzoa sortu
-            Instances dataDev = new Instances("Dataset", attributes, 0);
-            dataDev.setClassIndex(1); // "class" atributua klase atributua da
+            Instances dataDevTest = new Instances("Dataset", attributeList, 0);
+            dataDevTest.setClassIndex(attributeList.size() - 1); // Azken atributua klasea da
 
             // Karpetak zeharkatu eta instantziak gehitu
             for (File folder : classFolders) {
                 File[] files = folder.listFiles(File::isFile);
                 if (files != null) {
                     for (File file : files) {
-                        // Fitxategiaren edukia irakurri
-                        StringBuilder contentBuilder = new StringBuilder();
+                        // Fitxategiaren edukia irakurri eta hitzak atera
+                        List<String> words = new ArrayList<>();
                         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                             String line;
                             while ((line = reader.readLine()) != null) {
-                                contentBuilder.append(line).append("\n");
+                                // Hitzak atera (alfanumerikoak soilik)
+                                String[] tokens = line.split("\\W+");
+                                for (String token : tokens) {
+                                    if (!token.isEmpty()) {
+                                        words.add(token.toLowerCase()); // Hitzak minuskulaz
+                                    }
+                                }
                             }
                         } catch (Exception e) {
                             System.out.println("Errorea fitxategia irakurtzean: " + file.getName());
@@ -136,26 +154,61 @@ public class datuBilketa {
                         }
 
                         // Instantzia sortu eta datuak gehitu
-                        DenseInstance instance = new DenseInstance(2);
-                        instance.setValue(attributes.get(0), contentBuilder.toString()); // Fitxategiaren edukia
-                        instance.setValue(attributes.get(1), folder.getName()); // Klasea (karpetaren izena)
-                        dataDev.add(instance);
+                        DenseInstance instance = new DenseInstance(attributeList.size());
+                        for (int i = 0; i < attributes.length; i++) {
+                            if (words.contains(attributes[i])) {
+                                instance.setValue(attributeList.get(i), 1.0); // Hitzaren presentzia
+                            } else {
+                                instance.setValue(attributeList.get(i), 0.0); // Hitzaren ez presentzia
+                            }
+                        }
+                        instance.setValue(attributeList.get(attributeList.size() - 1), folder.getName()); // Klasea
+                        dataDevTest.add(instance);
                     }
                 }
             }
-
-            // .arff fitxategia gorde
-            FileWriter writer = new FileWriter(outFile + "Dev.arff");
-            writer.write(dataDev.toString());
-            writer.close();
-
-            System.out.println("Fitxategia .arff formatuan ongi sortu da hemen: " + outFile + "Dev.arff");
-
-            return dataDev;
+            return dataDevTest;
         } catch (Exception e) {
             System.out.println("Errorea: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
+    }
+
+    private void save(Instances attributes, String outFile) {
+        try {
+            // datuak karpeta eratu
+            File dir = new File("datuak");
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            FileWriter writer = new FileWriter("datuak/" + outFile);
+            // .arff fitxategia gorde
+            writer.write(attributes.toString());
+            writer.close();
+            System.out.println("Fitxategia .arff formatuan ongi sortu da hemen: " + outFile);
+        } catch (Exception e) {
+            System.out.println("Errorea: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void save(String[] data, String outFile) {
+        try {
+            FileWriter writer = new FileWriter("datuak/" + outFile);
+            writer.write(data + "\n");
+            writer.close();
+            System.out.println("Fitxategia .txt formatuan ongi sortu da hemen: " + outFile);
+        } catch (Exception e) {
+            System.out.println("Errorea: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        // Test
+        String inPath = "movies_reviews/";
+        String outFile = "datuak";
+        datuBilketa.getDB().bildu(inPath, outFile);
     }
 }
