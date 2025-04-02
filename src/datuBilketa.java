@@ -49,7 +49,7 @@ public class datuBilketa {
 
 
         // Ateratako atributuak Test-ri pasatu
-        Instances test = datuakBildu(inPath + "/test");
+        Instances test = datuakBilduTest(inPath + "/test");
         save(test, outFile + "Test.arff"); // Gorde datuak
         Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test, attributes);
         save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
@@ -78,8 +78,8 @@ public class datuBilketa {
             attributes.add(new Attribute("class", classValues)); // Klase atributua
 
             // Datu multzoa sortu
-            Instances dataTrain = new Instances("Dataset", attributes, 0);
-            dataTrain.setClassIndex(1); // "class" atributua klase atributua da
+            Instances data = new Instances("Dataset", attributes, 0);
+            data.setClassIndex(1); // "class" atributua klase atributua da
 
             // Karpetak zeharkatu eta instantziak gehitu
             for (File folder : classFolders) {
@@ -102,15 +102,63 @@ public class datuBilketa {
                         DenseInstance instance = new DenseInstance(2);
                         instance.setValue(attributes.get(0), contentBuilder.toString()); // Fitxategiaren edukia
                         instance.setValue(attributes.get(1), folder.getName()); // Klasea (karpetaren izena)
-                        dataTrain.add(instance);
+                        data.add(instance);
                     }
                 }
             }
-
-            return dataTrain;
+            return data;
         } catch (Exception e) {
             System.out.println("Errorea: " + e.getMessage());
             e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+    }
+
+    private Instances datuakBilduTest(String inPath) {
+        try {
+            // Direktorioko karpetak irakurri
+            File dir = new File(inPath);
+            if (!dir.isDirectory()) {
+                throw new Exception("Emandako path-a ez da direktorio bat.");
+            }
+
+            // .arff fitxategirako atributuak sortu
+            ArrayList<Attribute> attributes = new ArrayList<>();
+            attributes.add(new Attribute("file_content", (List<String>) null)); // Fitxategiaren edukia
+            attributes.add(new Attribute("class", "{neg,pos}")); // Klase atributua
+
+            // Datu multzoa sortu
+            Instances dataTest = new Instances("Dataset", attributes, 0);
+            dataTest.setClassIndex(1); // "class" atributua klase atributua da
+
+            // Karpetak zeharkatu eta instantziak gehitu
+            File[] files = dir.listFiles(File::isFile);
+            if (files != null) {
+                for (File file : files) {
+                    // Fitxategiaren edukia irakurri
+                    StringBuilder contentBuilder = new StringBuilder();
+                    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            contentBuilder.append(line).append("\n");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Errorea fitxategia irakurtzean: " + file.getName());
+                        e.printStackTrace();
+                    }
+                    // Instantzia sortu eta datuak gehitu
+                    DenseInstance instance = new DenseInstance(2);
+                    instance.setValue(attributes.get(0), contentBuilder.toString()); // Fitxategiaren edukia
+                    instance.setValue(attributes.get(1), "?"); // Klasea (karpetaren izena)
+                    dataTest.add(instance);
+                }
+            }
+            return dataTest;
+        } catch (Exception e) {
+            System.out.println("Errorea: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
             return null;
         }
     }
@@ -130,6 +178,7 @@ public class datuBilketa {
         } catch (Exception e) {
             System.out.println("Errorea: " + e.getMessage());
             e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -143,6 +192,7 @@ public class datuBilketa {
             System.out.println("Fitxategia .txt formatuan ongi sortu da hemen: " + outFile);
         } catch (Exception e) {
             System.out.println("Errorea: " + e.getMessage());
+            System.exit(1);
             e.printStackTrace();
         }
     }
