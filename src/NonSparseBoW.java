@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import weka.attributeSelection.AttributeSelection;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
+import weka.attributeSelection.InfoGainAttributeEval;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -86,6 +87,41 @@ public class NonSparseBoW {
             return filteredTrain;
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da datu garbiketa burutu.");
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+    }
+
+    private Instances filterAttributesByInfoGain(Instances datuak) {
+        InfoGainAttributeEval evaluator = new InfoGainAttributeEval(); // Use InfoGain evaluator
+        try {
+            // Get the InfoGain values for each attribute
+            double[] infoGainValues = new double[datuak.numAttributes()];
+            for (int i = 0; i < datuak.numAttributes(); i++) {
+                infoGainValues[i] = evaluator.evaluateAttribute(i);
+            }
+
+            // Print InfoGain values
+            System.out.println("InfoGain values for attributes:");
+            for (int i = 0; i < infoGainValues.length; i++) {
+                System.out.println("Attribute " + i + ": " + infoGainValues[i]);
+            }
+
+            // Filter attributes with InfoGain > 0
+            Instances filteredTrain = new Instances(datuak);
+            for (int i = infoGainValues.length - 1; i >= 0; i--) {
+                if (infoGainValues[i] == 0) {
+                    filteredTrain.deleteAttributeAt(i);
+                }
+            }
+
+            System.out.println("Number of attributes before filtering: " + datuak.numAttributes());
+            System.out.println("Number of attributes after filtering: " + filteredTrain.numAttributes());
+
+            return filteredTrain;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da InfoGain bidezko atributuen iragazketa burutu.");
             e.printStackTrace();
             System.exit(1);
             return null;
