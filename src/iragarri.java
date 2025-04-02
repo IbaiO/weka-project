@@ -308,7 +308,7 @@ public class iragarri {
             // Usar la clase NonSparseBoW para transformar las instancias
             NonSparseBoW nonSparseBoW = NonSparseBoW.getNonSparseBoW();
             String nonSparseOutputPath = "src/emaitzak/dev_data_nonSparse.arff";
-            Instances transformedInstances = nonSparseBoW.transform(devInstances, nonSparseOutputPath);
+            Instances transformedInstances = nonSparseBoW.transformTrain(devInstances);
 
             System.out.println("NonSparseBoW instances created and saved to: " + nonSparseOutputPath);
 

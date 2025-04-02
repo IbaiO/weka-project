@@ -54,7 +54,7 @@ public class sMO {
         double[] omegaValues = {0.5, 1.0, 2.0}; // Valores de Omega (para PukKernel)
         double[] sigmaValues = {0.5, 1.0, 2.0}; // Valores de Sigma (para PukKernel)
 
-        double bestAccuracy = 0;
+        double bestWeightedFMeasure = 0; // Mejor weighted average F-measure
         double bestC = 0;
         double bestKernelParam1 = 0; // Puede ser Gamma, Exponent, Omega, etc.
         double bestKernelParam2 = 0; // Solo para PukKernel (Sigma)
@@ -84,16 +84,19 @@ public class sMO {
                     Evaluation eval = new Evaluation(train);
                     eval.crossValidateModel(smo, train, 10, new Random(1)); // 10-fold cross-validation
 
+                    // Obtener el weighted average F-measure
+                    double weightedFMeasure = eval.weightedFMeasure();
+
                     // Imprimir resultados
                     System.out.println("Kernel: " + kernel.getClass().getSimpleName());
                     System.out.println("C: " + c);
                     System.out.println("Param1: " + param1 + (kernel instanceof weka.classifiers.functions.supportVector.Puk ? ", Param2: " + param2 : ""));
-                    System.out.println("Accuracy: " + eval.pctCorrect() + "%");
+                    System.out.println("Weighted F-Measure: " + weightedFMeasure);
                     System.out.println("====================================");
 
-                    // Actualizar el mejor modelo si la precisión mejora
-                    if (eval.pctCorrect() > bestAccuracy) {
-                        bestAccuracy = eval.pctCorrect();
+                    // Actualizar el mejor modelo si el weighted F-measure mejora
+                    if (weightedFMeasure > bestWeightedFMeasure) {
+                        bestWeightedFMeasure = weightedFMeasure;
                         bestC = c;
                         bestKernelParam1 = param1;
                         bestKernelParam2 = param2;
@@ -111,7 +114,7 @@ public class sMO {
         // Imprimir el mejor valor de parámetros
         System.out.println("Best C for " + kernel.getClass().getSimpleName() + ": " + bestC);
         System.out.println("Best Param1: " + bestKernelParam1 + (kernel instanceof weka.classifiers.functions.supportVector.Puk ? ", Best Param2: " + bestKernelParam2 : ""));
-        System.out.println("Best Accuracy: " + bestAccuracy + "%");
+        System.out.println("Best Weighted F-Measure: " + bestWeightedFMeasure);
         System.out.println("====================================");
 
         // Retornar el mejor modelo con los mejores parámetros
