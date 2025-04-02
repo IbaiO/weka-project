@@ -30,7 +30,7 @@ public class NonSparseBoW {
         Instances dataGarbi = datu_garbiketa(data);
         Instances BoWData = transformToBoW(data);
         Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
-        Instances filteredData = datu_garbiketa2(NonSparseBoWData);
+        Instances filteredData = filteredAttributes(NonSparseBoWData);
         return filteredData;
     }
 
@@ -61,7 +61,7 @@ public class NonSparseBoW {
         return datuak;
     }
 
-    private Instances datu_garbiketa2(Instances datuak) {
+    private Instances filteredAttributes(Instances datuak) {
         // Use the AttributeSelection class to perform feature selection
         AttributeSelection attributeSelection = new AttributeSelection();
         CfsSubsetEval evaluator = new CfsSubsetEval();
@@ -158,6 +158,27 @@ public class NonSparseBoW {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Instances transformDevTest(Instances data, String[] attributes){
+        Instances datuak = datu_garbiketa(data);
+        // Iragazi atributuak
+        Instances filteredData = new Instances(datuak);
+        for (int i = filteredData.numAttributes() - 1; i >= 0; i--) {
+            boolean keep = false;
+            for (String attribute : attributes) {
+                if (filteredData.attribute(i).name().equals(attribute)) {
+                    keep = true;
+                    break;
+                }
+            }
+            if (!keep) {
+                filteredData.deleteAttributeAt(i);
+            }
+        }
+        Instances BoWData = transformToBoW(filteredData);
+        Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
+        return NonSparseBoWData;
     }
 
     public static void main(String[] args) {
