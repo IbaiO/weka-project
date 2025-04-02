@@ -107,6 +107,7 @@ public class NonSparseBoW {
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da Bag of Words transformazioa burutu.");
             e.printStackTrace();
+            System.exit(1);
             return null;
         }
     }
@@ -121,6 +122,17 @@ public class NonSparseBoW {
             System.out.println("ERROREA: Ezin izan da Non Sparse transformazioa burutu.");
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            DataSource source = new DataSource("datuak/datuakTrain.arff");
+            Instances data = source.getDataSet();
+            NonSparseBoW.getNonSparseBoW().transformTrain(data);
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da datu multzoa kargatu.");
+            e.printStackTrace();
         }
     }
 }
