@@ -19,17 +19,14 @@ public class main {
 
         ///////////// PROCESAMENDUA /////////////
         instances = datuBilketa.getDB().bildu(inputPath, outputFile);
-        Instances instancesTrain = instances[0]; instancesTrain.setClassIndex(instancesTrain.numAttributes() - 1);
-        Instances instancesDev = instances[1]; instancesDev.setClassIndex(instancesDev.numAttributes() - 1);
-        Instances BoWinstances = NonSparseBoW.getNonSparseBoW().transform(instancesTrain, outputFile);
-        Instances BoWinstancesDev = NonSparseBoW.getNonSparseBoW().transform(instancesDev, outputFile);
+        System.out.println(instances);
         // bostgarren laborategia
         // SMO algoritmoa
         // Linear regression algoritmoa        
 
         ///////////// IDAZKETA /////////////
         ArffSaver saver = new ArffSaver();
-        saver.setInstances(BoWinstances);
+        saver.setInstances(instances[0]);
         try {
             saver.setFile(new File(outputFile));
             saver.writeBatch();
