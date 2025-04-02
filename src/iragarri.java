@@ -80,6 +80,7 @@ public class iragarri {
         if (modelType.equals("lineal")) {
             String outputFilePath = "src/emaitzak/iragarpena_LinearRegression.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+                writer.write("Iragarpenak Linear Regrssion erabiliz:\n"+"  - num: Zenbakizko balioa (%)\n"+"            %0 (Neg) -===========- %100 (Pos)\n"+"  - k: Klasea (Pos/Neg)\n\n");
                 // Escribir predicciones
                 for (int i = 0; i < RAWinstances.numInstances(); i++) {
                     Instance instance = RAWinstances.instance(i);
@@ -88,7 +89,7 @@ public class iragarri {
     
     
                     // Escribir línea formateada
-                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                    writer.write((i + 1) + ". instantzia:     num: %" +String.format("%.2f", prediction * 100)+"       k: "+ (predictedClass ? "Pos" : "Neg")+"\n");
                 }
                 System.out.println("Predictions saved to: " + outputFilePath);
             } catch (IOException e) {
