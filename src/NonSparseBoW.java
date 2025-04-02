@@ -128,22 +128,21 @@ public class NonSparseBoW {
         }
     }
 
-    private Instances transformToBoW(Instances data) {
-        int[] probatxoa = {0};
+    public Instances transformToBoW(Instances data) {
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
-        filter.setOutputWordCounts(true); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
-        filter.setAttributeIndicesArray(probatxoa); // Apply to all string attributes
+        filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
+        filter.setAttributeIndices("first-last"); // Atributu guztiei aplikatu
+        filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
+        filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
 
         try {
-            data.setClassIndex(data.numAttributes() - 1); // Klase atributua azkena izan behar da
             filter.setInputFormat(data);
             Instances newData = Filter.useFilter(data, filter);
             return newData;
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da Bag of Words transformazioa burutu.");
             e.printStackTrace();
-            System.exit(1);
             return null;
         }
     }
