@@ -30,7 +30,6 @@ public class datuBilketa {
         // Aldatu BoW formatura
         Instances trainBoW = NonSparseBoW.getNonSparseBoW().transformTrain(train);
         save(trainBoW, outFile + "TrainBoW.arff"); // Gorde datuak
-        System.out.println("TrainBoW: " + trainBoW);
 
         // Atera atributuak
         String[] attributes = new String[trainBoW.numAttributes()];
@@ -46,7 +45,7 @@ public class datuBilketa {
         save(dev, outFile + "Dev.arff"); // Gorde datuak
         Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev, attributes);
         save(dev, outFile + "DevBoW.arff"); // Gorde datuak
-
+        
 
         // Ateratako atributuak Test-ri pasatu
         Instances test = datuakBilduTest(inPath + "/test");
