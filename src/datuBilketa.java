@@ -30,6 +30,7 @@ public class datuBilketa {
         // Aldatu BoW formatura
         Instances trainBoW = NonSparseBoW.getNonSparseBoW().transformTrain(train);
         save(trainBoW, outFile + "TrainBoW.arff"); // Gorde datuak
+        System.out.println("TrainBoW: " + trainBoW);
 
         // Atera atributuak
         String[] attributes = new String[trainBoW.numAttributes()];
