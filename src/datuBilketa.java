@@ -44,7 +44,7 @@ public class datuBilketa {
         Instances dev = datuakBildu(inPath + "/dev");
         save(dev, outFile + "Dev.arff"); // Gorde datuak
         Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev, attributes);
-        save(dev, outFile + "DevBoW.arff"); // Gorde datuak
+        save(devBoW, outFile + "DevBoW.arff"); // Gorde datuak
         
 
         // Ateratako atributuak Test-ri pasatu
