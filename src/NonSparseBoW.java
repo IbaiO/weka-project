@@ -160,25 +160,53 @@ public class NonSparseBoW {
         }
     }
 
-    public Instances transformDevTest(Instances data, String[] attributes){
-        Instances datuak = datu_garbiketa(data);
-        // Iragazi atributuak
-        Instances filteredData = new Instances(datuak);
-        for (int i = filteredData.numAttributes() - 1; i >= 0; i--) {
-            boolean keep = false;
+    public Instances transformDevTest(Instances data, String[] attributes) {
+        try {
+            // Preprocesar los datos
+            Instances datuak = datu_garbiketa(data);
+
+            // Transformar a Bag of Words
+            Instances BoWData = transformToBoW(datuak);
+
+            // Crear un filtro para eliminar atributos no deseados
+            weka.filters.unsupervised.attribute.Remove removeFilter = new weka.filters.unsupervised.attribute.Remove();
+
+            // Obtener los índices de los atributos que queremos conservar
+            StringBuilder indicesToKeep = new StringBuilder();
             for (String attribute : attributes) {
-                if (filteredData.attribute(i).name().equals(attribute)) {
-                    keep = true;
-                    break;
+                weka.core.Attribute attr = BoWData.attribute(attribute);
+                if (attr != null) { // Verificar si el atributo existe
+                    System.out.println("Atributua aurkitu: " + attribute);
+                    int index = attr.index() + 1; // +1 porque Weka usa índices 1-based
+                    indicesToKeep.append(index).append(",");
+                } else {
+                    System.out.println("Atributua ez da aurkitu: " + attribute);
                 }
             }
-            if (!keep) {
-                filteredData.deleteAttributeAt(i);
+
+            // Verificar si se encontraron atributos válidos
+            if (indicesToKeep.length() == 0) {
+                System.out.println("Ez da aurkitu atributurik datu multzoan.");
+                return null;
             }
+
+            // Configurar el filtro para conservar solo los atributos seleccionados
+            removeFilter.setAttributeIndices(indicesToKeep.toString());
+            removeFilter.setInvertSelection(true); // Conservar los atributos especificados
+            removeFilter.setInputFormat(BoWData);
+
+            // Aplicar el filtro
+            Instances filteredData = Filter.useFilter(BoWData, removeFilter);
+
+            // Convertir a formato no disperso
+            Instances NonSparseBoWData = transformToBoWNonSparse(filteredData);
+
+            return NonSparseBoWData;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da transformDevTest metodoa burutu.");
+            e.printStackTrace();
+            return null;
         }
-        Instances BoWData = transformToBoW(filteredData);
-        Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
-        return NonSparseBoWData;
     }
 
     public static void main(String[] args) {
