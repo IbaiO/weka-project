@@ -2,6 +2,7 @@ package src;
 
 import java.util.regex.Pattern;
 import java.io.File;
+import java.io.FileWriter;
 
 import weka.attributeSelection.AttributeSelection;
 import weka.attributeSelection.BestFirst;
@@ -24,13 +25,18 @@ public class NonSparseBoW {
         } return nireNonSparseBoW;
     }
 
-    public Instances transform(Instances data, String outFile) {
+    public Instances transformTrain(Instances data) {
         Instances dataGarbi = datu_garbiketa(data);
         Instances BoWData = transformToBoW(data);
         Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
         Instances filteredData = datu_garbiketa2(NonSparseBoWData);
-        save(filteredData, outFile);
         return filteredData;
+    }
+
+    public Instances transformDevTest (Instances data) {
+        Instances BoWData = transformToBoW(data);
+        Instances NonSparseBoW = transformToBoWNonSparse(BoWData);
+        return NonSparseBoW;
     }
 
     private Instances datu_garbiketa(Instances datuak) {
@@ -86,14 +92,12 @@ public class NonSparseBoW {
         }
     }
 
-    public Instances transformToBoW(Instances data) {
+    private Instances transformToBoW(Instances data) {
         int[] probatxoa = {0};
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
-        filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
+        filter.setOutputWordCounts(true); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
         filter.setAttributeIndicesArray(probatxoa); // Apply to all string attributes
-        // filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
-        // filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
 
         try {
             data.setClassIndex(data.numAttributes() - 1); // Klase atributua azkena izan behar da
@@ -107,7 +111,7 @@ public class NonSparseBoW {
         }
     }
 
-    public Instances transformToBoWNonSparse(Instances data) {
+    private Instances transformToBoWNonSparse(Instances data) {
         SparseToNonSparse filter = new SparseToNonSparse();
         try {
             filter.setInputFormat(data);
@@ -118,38 +122,5 @@ public class NonSparseBoW {
             e.printStackTrace();
             return null;
         }
-    }
-
-    private void save(Instances data, String outFile) {
-        try {
-            // .model luzapena kendu eta BoW.arff bihurtu
-            String arffOutFile = outFile.replaceAll("\\.model$", "BoW.arff");
-            // Gorde datuak .arff formatuan
-            weka.core.converters.ArffSaver saver = new weka.core.converters.ArffSaver();
-            saver.setInstances(data);
-            saver.setFile(new File(arffOutFile));
-            saver.writeBatch();
-            System.out.println("Transformed data saved to: " + arffOutFile);
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da BoW datuak gorde.");
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        // Data
-        try {
-            DataSource ds = new DataSource("MiPolla2.arff");
-            Instances data = ds.getDataSet();
-            data.setClassIndex(data.numAttributes() - 1); // Klase atributua azkena izan behar da
-
-            String outputFile = "MiPolla2.model"; // Sartu hemen zure datu multzoaren irteera
-            NonSparseBoW.getNonSparseBoW().transform(data, outputFile);
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da datu multzoa irakurri.");
-            e.printStackTrace();
-            return;
-        }
-
     }
 }
