@@ -1,5 +1,4 @@
 package src;
-
 import java.io.File;
 import java.io.FileReader;
 import weka.core.Instances;
@@ -7,7 +6,7 @@ import weka.core.converters.ArffSaver;
 
 @SuppressWarnings("all")
 public class main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         ///////////// HASIERAKETAK /////////////
         if (args.length != 2) {
             System.out.println("Erabilera: java -jar weka-project.jar <input karpetaren path-a> <output file-a (extentzio gabe)>");
