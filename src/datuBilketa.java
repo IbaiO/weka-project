@@ -31,25 +31,16 @@ public class datuBilketa {
         Instances trainBoW = NonSparseBoW.getNonSparseBoW().transformTrain(train);
         save(trainBoW, outFile + "TrainBoW.arff"); // Gorde datuak
 
-        // Atera atributuak
-        String[] attributes = new String[trainBoW.numAttributes()];
-        for (int i = 0; i < trainBoW.numAttributes(); i++) {
-            attributes[i] = trainBoW.attribute(i).name();
-        }
-        // Aukeratutako atributuak gorde
-        save(attributes, outFile + "attributes.txt"); // Gorde datuak
-
-
         // Ateratako atributuak Dev-ri pasatu
         Instances dev = datuakBilduDev(inPath + "/dev");
         save(dev, outFile + "Dev.arff"); // Gorde datuak
-        Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev, attributes);
+        Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev);
         save(devBoW, outFile + "DevBoW.arff"); // Gorde datuak
 
         // Ateratako atributuak Test-ri pasatu
         Instances test = datuakBilduTest(inPath + "/test_blind");
         save(test, outFile + "Test.arff"); // Gorde datuak
-        Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test, attributes);
+        Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test);
         save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
         
         return new Instances[] {train, dev, test};        
