@@ -136,8 +136,8 @@ public class NonSparseBoW {
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
         filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
         filter.setAttributeIndices("first"); // Atributu guztiei aplikatu
-        //filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
-        //filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
+        filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
+        filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
 
         try {
             filter.setInputFormat(data);

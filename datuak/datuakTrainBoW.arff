@@ -1,4 +1,4 @@
-@relation 'Dataset-weka.filters.unsupervised.attribute.StringToWordVector-R1-W1000-prune-rate-1.0-N0-L-stemmerweka.core.stemmers.NullStemmer-stopwords-handlerweka.core.stopwords.Null-M1-O-tokenizerweka.core.tokenizers.WordTokenizer -delimiters \" \\r\\n\\t.,;:\\\'\\\"()?!\"-weka.filters.unsupervised.instance.SparseToNonSparse-weka.filters.unsupervised.attribute.Remove-V-R72,106-107,110,219,262,303,320,353,387,391,482,511,519-520,528,531,579,608,610,629-630,632,647,657,689,746,770,785,791,816,818,822,829,832,839,851,862,898,944,982,991-992,1003,1'
+@relation 'Dataset-weka.filters.unsupervised.attribute.StringToWordVector-R1-W1000-prune-rate-1.0-N0-L-stemmerweka.core.stemmers.NullStemmer-stopwords-handlerweka.core.stopwords.Null-M1-O-tokenizerweka.core.tokenizers.WordTokenizer -delimiters \" \\r\\n\\t.,;:\\\'\\\"()?!\"-weka.filters.unsupervised.instance.SparseToNonSparse-weka.filters.unsupervised.attribute.Remove-V-R72,106-107,110,218,261,302,319,352,386,390,481,510,518-519,527,530,578,607,609,628-629,631,646,656,688,745,769,784,790,815,817,821,828,831,838,850,861,897,943,981,990-991,1002,1'
 
 @attribute bad numeric
 @attribute boring numeric
