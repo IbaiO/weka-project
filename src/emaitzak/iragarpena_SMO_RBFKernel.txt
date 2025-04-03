@@ -79,7 +79,7 @@
 79. instantzia: Neg
 80. instantzia: Neg
 81. instantzia: Neg
-82. instantzia: Pos
+82. instantzia: Neg
 83. instantzia: Neg
 84. instantzia: Neg
 85. instantzia: Neg
@@ -195,7 +195,7 @@
 195. instantzia: Neg
 196. instantzia: Neg
 197. instantzia: Neg
-198. instantzia: Neg
+198. instantzia: Pos
 199. instantzia: Neg
 200. instantzia: Neg
 201. instantzia: Neg
