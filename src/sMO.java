@@ -2,13 +2,10 @@ package src;
 
 import weka.classifiers.functions.SMO;
 import weka.classifiers.Evaluation;
-import weka.core.Attribute;
-import weka.core.DenseInstance;
+
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.StringToWordVector;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 public class sMO {

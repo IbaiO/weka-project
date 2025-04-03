@@ -27,12 +27,13 @@ public class main {
 
         ///////////// PROCESAMENDUA /////////////
         instances = datuBilketa.getDB().bildu(inputPath, outputFile);
-        iragarri.main(instances[0], instances[1]);
-        // bostgarren laborategia
-        // SMO algoritmoa
-        // Linear regression algoritmoa   
+        iragarri.main(instances[0], instances[1], "Dev");
+        Instances trainDev = new Instances(instances[0]);
+        trainDev.addAll(instances[1]);
+        iragarri.main(trainDev, instances[2], "Test");
         
         
+
         System.exit(0);
 
 

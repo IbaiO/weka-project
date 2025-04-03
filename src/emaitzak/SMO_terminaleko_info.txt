@@ -1,3 +1,5 @@
+TRAIN --> DEV:
+
 Kernel: PolyKernel
 C: 0.1
 Param1: 1.0
@@ -47,7 +49,13 @@ Best C for PolyKernel: 0.1
 Best Param1: 1.0
 Best Weighted F-Measure: 0.8249810327626025
 ====================================
-Evaluating RBFKernel...
+
+
+
+
+
+TRAIN + DEV --> TEST:
+
 Kernel: RBFKernel
 C: 0.1
 Param1: 0.01
@@ -97,7 +105,6 @@ Best C for RBFKernel: 1.0
 Best Param1: 0.01
 Best Weighted F-Measure: 0.8315430560345946
 ====================================
-Evaluating PukKernel...
 Kernel: Puk
 C: 0.1
 Param1: 0.5, Param2: 0.5
