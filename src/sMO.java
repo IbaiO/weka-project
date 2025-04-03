@@ -14,20 +14,21 @@ import java.util.Random;
 public class sMO {
 
     public static SMO[] main(Instances dataset) throws Exception {
+    
         // Cargar los datos de entrenamiento
+
         Instances train = dataset;
         if (train == null) {
             System.out.println("Error: Unable to load training data.");
             return null;
         }
 
-        // Preprocesar los datos si contienen atributos de texto
-        dataset = preprocessData(train);
+        System.out.println("Índice de clase: " + train.classIndex());
+        System.out.println("Nombre del atributo de clase: " + train.attribute(train.classIndex()).name());
+        System.out.println("Tipo del atributo de clase: " + (train.attribute(train.classIndex()).isNominal() ? "Nominal" : "Numérico"));
 
-        // Configurar índice de clase
-        if (train.classIndex() == -1) {
-            train.setClassIndex(train.numAttributes() - 1);
-        }
+        // Preprocesar los datos si contienen atributos de texto
+        train = preprocessData(train);
 
         // Comparar diferentes kernels y optimizar C
         System.out.println("Evaluating PolyKernel...");
@@ -48,7 +49,7 @@ public class sMO {
     }
 
     private static SMO evaluateKernel(Instances train, weka.classifiers.functions.supportVector.Kernel kernel, double kernelParam) throws Exception {
-        double[] cValues = {0.1, 1, 10, 100}; // Valores de C a probar
+        double[] cValues = {0.1, 1, 10}; // Valores de C a probar
         double[] gammaValues = {0.01, 0.1, 1}; // Valores de Gamma (para RBFKernel)
         double[] exponentValues = {1, 2, 3}; // Valores de Exponent (para PolyKernel)
         double[] omegaValues = {0.5, 1.0, 2.0}; // Valores de Omega (para PukKernel)
@@ -123,7 +124,15 @@ public class sMO {
 
     private static Instances preprocessData(Instances dataset) {
         try {
-            // StringToWordVector iragazkia aplikatu, behar izanez gero.
+            // Configurar el índice de clase como el primer atributo
+            dataset.setClassIndex(0);
+
+            // Verificar si el atributo de clase es numérico y convertirlo a nominal si es necesario
+            if (dataset.classIndex() != -1 && dataset.attribute(dataset.classIndex()).isNumeric()) {
+                dataset = convertNumericClassToNominal(dataset, dataset.classIndex());
+            }
+
+            // Aplicar StringToWordVector si hay atributos de texto
             boolean hasStringAttributes = false;
             for (int i = 0; i < dataset.numAttributes(); i++) {
                 if (dataset.attribute(i).isString()) {
@@ -138,57 +147,19 @@ public class sMO {
                 dataset = Filter.useFilter(dataset, stringToWordVector);
             }
 
-            // Atributu bitar nominalak zenbakizkotan bihurtu
-            if (dataset.classIndex() != -1) {
-                int classIndex = dataset.classIndex();
-                if (dataset.attribute(classIndex).isNominal() && dataset.attribute(classIndex).numValues() == 2) {
-                    // Atributu zerrenda bat sortu, DataSet berriarentzat
-                    ArrayList<Attribute> attributes = new ArrayList<>();
-                    for (int i = 0; i < dataset.numAttributes(); i++) {
-                        if (i == classIndex) {
-                            // Reemplazar el atributo de clase nominal con un atributo numérico
-                            attributes.add(new Attribute("class"));
-                        } else {
-                            attributes.add(dataset.attribute(i));
-                        }
-                    }
-
-                    // DataSet berria sortu Pos/Neg klasea zenbaki gisa jarrita
-                    // Pos: 1, Neg: 0
-                    Instances newDataset = new Instances(dataset.relationName(), attributes, dataset.numInstances());
-                    newDataset.setClassIndex(classIndex);
-
-                    // Instantziak DataSet berrira gehitu
-                    for (int i = 0; i < dataset.numInstances(); i++) {
-                        DenseInstance newInstance = new DenseInstance(newDataset.numAttributes());
-                        newInstance.setDataset(newDataset);
-
-                        for (int j = 0; j < dataset.numAttributes(); j++) {
-                            if (j == classIndex) {
-                                String classValue = dataset.instance(i).stringValue(classIndex);
-                                if (classValue.equalsIgnoreCase("pos")) {
-                                    newInstance.setValue(classIndex, 1);
-                                } else if (classValue.equalsIgnoreCase("neg")) {
-                                    newInstance.setValue(classIndex, 0);
-                                }
-                            } else {
-                                newInstance.setValue(j, dataset.instance(i).value(j));
-                            }
-                        }
-
-                        newDataset.add(newInstance);
-                    }
-
-                    dataset = newDataset;
-                }
-            }
-
             return dataset;
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
             e.printStackTrace();
             return null;
         }
+    }
+    
+    private static Instances convertNumericClassToNominal(Instances dataset, int classIndex) throws Exception {
+        weka.filters.unsupervised.attribute.NumericToNominal numericToNominal = new weka.filters.unsupervised.attribute.NumericToNominal();
+        numericToNominal.setAttributeIndices(String.valueOf(classIndex + 1)); // Weka usa índices 1-based
+        numericToNominal.setInputFormat(dataset);
+        return Filter.useFilter(dataset, numericToNominal);
     }
 }
 
