@@ -30,7 +30,7 @@ public class NonSparseBoW {
         Instances dataGarbi = datu_garbiketa(data);
         Instances BoWData = transformToBoW(data);
         Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
-        Instances filteredData = filteredAttributes(NonSparseBoWData);
+        Instances filteredData = filterAttributes(NonSparseBoWData);
         return filteredData;
     }
 
@@ -61,7 +61,7 @@ public class NonSparseBoW {
         return datuak;
     }
 
-    private Instances filteredAttributes(Instances datuak) {
+    private Instances filterAttributes(Instances datuak) {
         // Use the AttributeSelection class to perform feature selection
         AttributeSelection attributeSelection = new AttributeSelection();
         CfsSubsetEval evaluator = new CfsSubsetEval();
