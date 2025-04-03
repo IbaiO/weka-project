@@ -15,8 +15,11 @@ public class sMO {
 
     public static SMO[] main(Instances dataset) throws Exception {
     
-        // Cargar los datos de entrenamiento
+        // Ignorar advertencias de netlib-java y establecer propiedades para usar F2jBLAS y F2jLAPACK
+        System.setProperty("com.github.fommil.netlib.BLAS", "com.github.fommil.netlib.F2jBLAS");
+        System.setProperty("com.github.fommil.netlib.LAPACK", "com.github.fommil.netlib.F2jLAPACK");
 
+        // Cargar los datos de entrenamiento
         Instances train = dataset;
         if (train == null) {
             System.out.println("Error: Unable to load training data.");

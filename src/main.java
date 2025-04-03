@@ -20,6 +20,10 @@ public class main {
         String inputPath = args[0]; System.out.println("Sarrerako fitxategia: " + inputPath);
         String outputFile = args[1]; System.out.println("Irteerako fitxategia: " + outputFile);
         Instances instances[] = null;
+        
+        // Configurar netlib-java para usar implementaciones en Java puro
+        System.setProperty("com.github.fommil.netlib.BLAS", "com.github.fommil.netlib.F2jBLAS");
+        System.setProperty("com.github.fommil.netlib.LAPACK", "com.github.fommil.netlib.F2jLAPACK");
 
         ///////////// PROCESAMENDUA /////////////
         instances = datuBilketa.getDB().bildu(inputPath, outputFile);
