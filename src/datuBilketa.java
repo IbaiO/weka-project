@@ -41,14 +41,13 @@ public class datuBilketa {
 
 
         // Ateratako atributuak Dev-ri pasatu
-        Instances dev = datuakBildu(inPath + "/dev");
+        Instances dev = datuakBilduDev(inPath + "/dev");
         save(dev, outFile + "Dev.arff"); // Gorde datuak
         Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev, attributes);
         save(devBoW, outFile + "DevBoW.arff"); // Gorde datuak
-        
 
         // Ateratako atributuak Test-ri pasatu
-        Instances test = datuakBilduTest(inPath + "/test");
+        Instances test = datuakBilduTest(inPath + "/test_blind");
         save(test, outFile + "Test.arff"); // Gorde datuak
         Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test, attributes);
         save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
@@ -114,6 +113,63 @@ public class datuBilketa {
         }
     }
 
+    private Instances datuakBilduDev(String inPath) {
+        try {
+            // Direktorioko karpetak irakurri
+            File dir = new File(inPath);
+            if (!dir.isDirectory()) {
+                throw new Exception("Emandako path-a ez da direktorio bat.");
+            }
+
+            // Karpetak (klasea) lortu
+            File[] classFolders = dir.listFiles(File::isDirectory);
+
+            // .arff fitxategirako atributuak sortu
+            ArrayList<Attribute> attributes = new ArrayList<>();
+            attributes.add(new Attribute("file_content", (List<String>) null)); // Fitxategiaren edukia
+            List<String> classValues = new ArrayList<>();
+            for (File folder : classFolders) {
+                classValues.add(folder.getName()); // Karpeten izenak klase bezala
+            }
+            attributes.add(new Attribute("class", classValues)); // Klase atributua
+
+            // Datu multzoa sortu
+            Instances data = new Instances("Dataset", attributes, 0);
+            data.setClassIndex(1); // "class" atributua klase atributua da
+
+            // Karpetak zeharkatu eta instantziak gehitu
+            for (File folder : classFolders) {
+                File[] files = folder.listFiles(File::isFile);
+                if (files != null) {
+                    for (File file : files) {
+                        // Fitxategiaren edukia irakurri
+                        StringBuilder contentBuilder = new StringBuilder();
+                        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                contentBuilder.append(line).append("\n");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Errorea fitxategia irakurtzean: " + file.getName());
+                            e.printStackTrace();
+                        }
+
+                        // Instantzia sortu eta datuak gehitu
+                        DenseInstance instance = new DenseInstance(2);
+                        instance.setValue(attributes.get(0), contentBuilder.toString()); // Fitxategiaren edukia
+                        data.add(instance);
+                    }
+                }
+            }
+            return data;
+        } catch (Exception e) {
+            System.out.println("Errorea: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+    }
+
     private Instances datuakBilduTest(String inPath) {
         try {
             // Direktorioko karpetak irakurri
@@ -125,7 +181,10 @@ public class datuBilketa {
             // .arff fitxategirako atributuak sortu
             ArrayList<Attribute> attributes = new ArrayList<>();
             attributes.add(new Attribute("file_content", (List<String>) null)); // Fitxategiaren edukia
-            attributes.add(new Attribute("class", "{neg,pos}")); // Klase atributua
+            List<String> classValues = new ArrayList<>();
+            classValues.add("neg");
+            classValues.add("pos");
+            attributes.add(new Attribute("class", classValues)); // Klase atributua
 
             // Datu multzoa sortu
             Instances dataTest = new Instances("Dataset", attributes, 0);
@@ -149,7 +208,6 @@ public class datuBilketa {
                     // Instantzia sortu eta datuak gehitu
                     DenseInstance instance = new DenseInstance(2);
                     instance.setValue(attributes.get(0), contentBuilder.toString()); // Fitxategiaren edukia
-                    instance.setValue(attributes.get(1), "?"); // Klasea (karpetaren izena)
                     dataTest.add(instance);
                 }
             }

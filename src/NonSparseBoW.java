@@ -143,6 +143,7 @@ public class NonSparseBoW {
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da Bag of Words transformazioa burutu.");
             e.printStackTrace();
+            System.exit(1);
             return null;
         }
     }
