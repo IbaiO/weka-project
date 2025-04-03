@@ -43,6 +43,7 @@ public class NonSparseBoW {
     private Instances datu_garbiketa(Instances datuak) {
         Pattern hashtagPattern = Pattern.compile("#\\w+");
         Pattern punctuationPattern = Pattern.compile("\\p{Punct}");
+        Pattern classWordPattern = Pattern.compile("\\b\\w*class\\w*\\b"); // Palabras que contienen "class"
 
         for (int i = 0; i < datuak.numInstances(); i++) {
             Instance instance = datuak.instance(i);
@@ -53,6 +54,8 @@ public class NonSparseBoW {
                     text = text.toLowerCase(); // Letra xehetan bihurtu
                     text = hashtagPattern.matcher(text).replaceAll(""); // Hashtagak kendu
                     text = punctuationPattern.matcher(text).replaceAll(""); // Puntuazioak kendu
+                    text = classWordPattern.matcher(text).replaceAll(""); // "class" hitzak kendu
+                    text = text.replaceAll("\\s+", " "); // Espazio gehiegizkoak kendu
                     instance.setValue(j, text);
                 }
             }
@@ -132,9 +135,9 @@ public class NonSparseBoW {
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
         filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
-        filter.setAttributeIndices("first-last"); // Atributu guztiei aplikatu
-        filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
-        filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
+        filter.setAttributeIndices("first"); // Atributu guztiei aplikatu
+        //filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
+        //filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
 
         try {
             filter.setInputFormat(data);
