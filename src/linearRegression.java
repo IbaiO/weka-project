@@ -67,7 +67,7 @@ public class linearRegression {
                     // Pos: 1, Neg: 0
                     Instances newDataset = new Instances(dataset.relationName(), attributes, dataset.numInstances());
                     newDataset.setClassIndex(classIndex);
-
+                    System.out.println("rdt6gyuijopkdrtfyugioojkl;");
                     // Instantziak DataSet berrira gehitu
                     for (int i = 0; i < dataset.numInstances(); i++) {
                         DenseInstance newInstance = new DenseInstance(newDataset.numAttributes());
@@ -80,6 +80,10 @@ public class linearRegression {
                                     newInstance.setValue(classIndex, 1);
                                 } else if (classValue.equalsIgnoreCase("neg")) {
                                     newInstance.setValue(classIndex, 0);
+                                } else if (classValue.equals("?")) {
+                                    newInstance.setMissing(classIndex);
+                                } else {
+                                    newInstance.setValue(classIndex, -1);
                                 }
                             } else {
                                 newInstance.setValue(j, dataset.instance(i).value(j));
