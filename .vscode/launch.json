@@ -1,0 +1,46 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "NonSparseBoW",
+            "request": "launch",
+            "mainClass": "src.NonSparseBoW",
+            "projectName": "weka-project_7a830df2"
+        },
+        {
+            "type": "java",
+            "name": "datuBilketa",
+            "request": "launch",
+            "mainClass": "src.datuBilketa",
+            "projectName": "weka-project_7a830df2"
+        },
+        {
+            "type": "java",
+            "name": "iragarri",
+            "request": "launch",
+            "mainClass": "src.iragarri",
+            "projectName": "weka-project_7a830df2"
+        },
+        {
+            "type": "java",
+            "name": "main",
+            "request": "launch",
+            "mainClass": "src.main",
+            "projectName": "weka-project_7a830df2",
+            "args": [
+                "movies_reviews/",
+                "datuak"
+            ]
+        }
+    ]
+}
