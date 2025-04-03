@@ -17,15 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class iragarri {
-    public static void main(String[] args) throws Exception {
-        // Entrenamiento y prueba (inputs manuales)
-        String trainSource = "MiPollaBoW.arff";
-        String testSource = "MiPollaBoW.arff";
-
-        // Cargar conjuntos de datos
-        Instances trainSet = loadData(trainSource);
-        Instances testSet = loadData(testSource);
-
+    public static void main(Instances trainSet, Instances testSet) throws Exception {
         if (trainSet == null || testSet == null) {
             System.out.println("Errorea: Ezin izan da datu multzoak kargatu.");
             return;
