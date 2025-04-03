@@ -43,7 +43,7 @@ public class datuBilketa {
         Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test);
         save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
         
-        return new Instances[] {train, dev, test};        
+        return new Instances[] {trainBoW, devBoW, testBoW};        
     }
 
     private Instances datuakBildu(String inPath) {

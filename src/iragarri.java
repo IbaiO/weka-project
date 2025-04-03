@@ -32,7 +32,7 @@ public class iragarri {
         SMO[] modelSMO = sMO.main(trainSet);
         SMO modelSMO1 = modelSMO[0];
         SMO modelSMO2 = modelSMO[1];
-        SMO modelSMO3 = modelSMO[2];
+        SMO modelSMO3 = modelSMO[2]; 
         if (modelLR != null) {
             // Preprocesar el conjunto de prueba
             Instances processedTestSet = preprocessTestData(testSet, trainSet);
@@ -45,7 +45,7 @@ public class iragarri {
             // Realizar predicciones
             iragarketakEgin(modelLR, processedTestSet, "lineal");
         }
-
+ 
         if (modelSMO != null) {
             // Preprocesar el conjunto de prueba
             Instances processedTestSet = preprocessTestData(testSet, trainSet);
