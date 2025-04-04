@@ -1,4 +1,5 @@
 package src;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import weka.core.Instances;
@@ -27,15 +28,24 @@ public class main {
 
         ///////////// PROCESAMENDUA /////////////
         instances = datuBilketa.getDB().bildu(inputPath, outputFile);
-        iragarri.main(instances[0], instances[1], "Dev");
+        iragarri.main(instances[0], instances[2], "Dev");
         Instances trainDev = new Instances(instances[0]);
         trainDev.addAll(instances[1]);
-        iragarri.main(trainDev, instances[2], "Test");
+        iragarri.main(trainDev, instances[3], "Test");
         
-        
+        ///////////// ACCURACY KALKULATU /////////////
+        File emaitzakDir = new File("src/emaitzak");
+        if (emaitzakDir.isDirectory()) {
+            File[] predictionFiles = emaitzakDir.listFiles((dir1, name) -> name.startsWith("iragarpena_Dev") && name.endsWith(".txt"));
+            if (predictionFiles != null) {
+                for (File predictionFile : predictionFiles) {
+                    System.out.println("Calculating accuracy for: " + predictionFile.getName());
+                    accuracyKalkulatu(predictionFile.getAbsolutePath(), instances[1]);
+                }
+            }
+        }
 
         System.exit(0);
-
 
         ///////////// IDAZKETA /////////////
         ArffSaver saver = new ArffSaver();
@@ -47,6 +57,44 @@ public class main {
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da " + outputFile + " fitxategia gorde.");
             e.printStackTrace();
+        }
+    }
+
+    public static double accuracyKalkulatu(String predictionsFilePath, Instances devSet) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(predictionsFilePath))) {
+            int correctPredictions = 0;
+            int totalInstances = devSet.numInstances();
+            int instanceIndex = 0;
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Skip lines that do not contain predictions
+                if (!line.contains("instantzia:")) {
+                    continue;
+                }
+
+                // Extract the predicted class from the line
+                String predictedClass = line.trim().endsWith("Pos") ? "pos" : "neg";
+
+                // Get the actual class from the Dev dataset
+                String actualClass = devSet.instance(instanceIndex).stringValue(devSet.classIndex());
+
+                // Compare the predicted class with the actual class
+                if (predictedClass.equalsIgnoreCase(actualClass)) {
+                    correctPredictions++;
+                }
+
+                instanceIndex++;
+            }
+
+            // Calculate accuracy as a percentage
+            double accuracy = (double) correctPredictions / totalInstances * 100;
+            System.out.println("Accuracy: " + String.format("%.2f", accuracy) + "%");
+            return accuracy;
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da iragarpen fitxategia irakurri edo prozesatu.");
+            e.printStackTrace();
+            return -1;
         }
     }
 }

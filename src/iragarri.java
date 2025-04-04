@@ -59,15 +59,15 @@ public class iragarri {
         }
     }
 
-    private static void iragarketakEgin(Classifier model, Instances RAWinstances, String modelType, String mota) throws Exception {
+    private static void iragarketakEgin(Classifier model, Instances instantzia, String modelType, String mota) throws Exception {
 
         if (modelType.equals("lineal")) {
             String outputFilePath = "src/emaitzak/iragarpena_"+mota+"_LinearRegression.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
                 writer.write("Iragarpenak Linear Regrssion erabiliz:\n"+"  - konf: Konfiantza maila (%)\n"+"            %0 (Neg) -===========- %100 (Pos)\n"+"  - k: Klasea (Pos/Neg)\n\n");
                 // Escribir predicciones
-                for (int i = 0; i < RAWinstances.numInstances(); i++) {
-                    Instance instance = RAWinstances.instance(i);
+                for (int i = 0; i < instantzia.numInstances(); i++) {
+                    Instance instance = instantzia.instance(i);
                     double prediction = model.classifyInstance(instance);
                     boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
     
@@ -87,8 +87,8 @@ public class iragarri {
             String outputFilePath = "src/emaitzak/iragarpena_"+mota+"_SMO_PolyKernel.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
                 // Escribir predicciones
-                for (int i = 0; i < RAWinstances.numInstances(); i++) {
-                    Instance instance = RAWinstances.instance(i);
+                for (int i = 0; i < instantzia.numInstances(); i++) {
+                    Instance instance = instantzia.instance(i);
                     double prediction = model.classifyInstance(instance);
                     boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
                     // Escribir línea formateada
@@ -106,8 +106,8 @@ public class iragarri {
             String outputFilePath = "src/emaitzak/iragarpena_"+mota+"_SMO_RBFKernel.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
                 // Escribir predicciones
-                for (int i = 0; i < RAWinstances.numInstances(); i++) {
-                    Instance instance = RAWinstances.instance(i);
+                for (int i = 0; i < instantzia.numInstances(); i++) {
+                    Instance instance = instantzia.instance(i);
                     double prediction = model.classifyInstance(instance);
                     boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
                     // Escribir línea formateada
@@ -125,8 +125,8 @@ public class iragarri {
             String outputFilePath = "src/emaitzak/iragarpena_"+mota+"_SMO_PukKernel.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
                 // Escribir predicciones
-                for (int i = 0; i < RAWinstances.numInstances(); i++) {
-                    Instance instance = RAWinstances.instance(i);
+                for (int i = 0; i < instantzia.numInstances(); i++) {
+                    Instance instance = instantzia.instance(i);
                     double prediction = model.classifyInstance(instance);
                     boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
                     // Escribir línea formateada

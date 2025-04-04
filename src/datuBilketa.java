@@ -26,24 +26,32 @@ public class datuBilketa {
     public Instances[] bildu(String inPath, String outFile) {
         // Sarrerako datuak irakurri
         Instances train = datuakBildu(inPath + "/train");
+        train = randomizeInstances(train); // Randomize Train
         save(train, outFile + "Train.arff"); // Gorde datuak
         // Aldatu BoW formatura
         Instances trainBoW = NonSparseBoW.getNonSparseBoW().transformTrain(train);
         save(trainBoW, outFile + "TrainBoW.arff"); // Gorde datuak
 
-        // Ateratako atributuak Dev-ri pasatu
-        Instances dev = datuakBilduDev(inPath + "/dev");
+        // Dev datuak irakurri eta randomizatu
+        Instances dev = datuakBildu(inPath + "/dev");
+        dev = randomizeInstances(dev); // Randomize Dev
         save(dev, outFile + "Dev.arff"); // Gorde datuak
         Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev);
         save(devBoW, outFile + "DevBoW.arff"); // Gorde datuak
 
-        // Ateratako atributuak Test-ri pasatu
+        // Dev2 sortu (klaseak ezezagunak)
+        Instances dev2 = createDev2(dev);
+        save(dev2, outFile + "Dev2.arff"); // Gorde datuak
+        Instances dev2BoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev2);
+        save(dev2BoW, outFile + "Dev2BoW.arff"); // Gorde datuak
+
+        // Test datuak irakurri
         Instances test = datuakBilduTest(inPath + "/test_blind");
         save(test, outFile + "Test.arff"); // Gorde datuak
         Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test);
         save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
         
-        return new Instances[] {trainBoW, devBoW, testBoW};        
+        return new Instances[] {trainBoW, devBoW, dev2BoW, testBoW};        
     }
 
     private Instances datuakBildu(String inPath) {
@@ -242,6 +250,32 @@ public class datuBilketa {
             System.out.println("Errorea: " + e.getMessage());
             System.exit(1);
             e.printStackTrace();
+        }
+    }
+
+    private Instances randomizeInstances(Instances data) {
+        // Randomize the order of instances using a fixed seed
+        data.randomize(new java.util.Random(81)); // Seed 81 for reproducibility
+        return data;
+    }
+
+    private Instances createDev2(Instances dev) {
+        try {
+            // Create a copy of the Dev dataset
+            Instances dev2 = new Instances(dev);
+
+            // Replace all class values with unknown values (?)
+            int classIndex = dev2.classIndex();
+            for (int i = 0; i < dev2.numInstances(); i++) {
+                dev2.instance(i).setMissing(classIndex);
+            }
+
+            return dev2;
+        } catch (Exception e) {
+            System.out.println("Errorea: Ezin izan da Dev2 sortu.");
+            e.printStackTrace();
+            System.exit(1);
+            return null;
         }
     }
 
