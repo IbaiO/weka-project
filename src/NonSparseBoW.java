@@ -1,6 +1,5 @@
 package src;
 
-import java.util.regex.Pattern;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedReader;
@@ -11,23 +10,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import weka.attributeSelection.AttributeSelection;
-import weka.attributeSelection.BestFirst;
-import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 import weka.filters.unsupervised.instance.SparseToNonSparse;
 
-
-@SuppressWarnings("all")
 public class NonSparseBoW {
     private static NonSparseBoW nireNonSparseBoW = null;
 
