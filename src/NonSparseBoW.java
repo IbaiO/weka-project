@@ -39,7 +39,7 @@ public class NonSparseBoW {
         Instances NonSparseBoWData = transformToBoWNonSparse(BoWData); // Non-Sparse formatura aldatu
         Instances filteredData = filterAttributesByInfoGain(NonSparseBoWData); // InfoGain bidez atributuak iragazi
         Instances rankedData = rankAttributesByInfoGain(filteredData); // Atributuak InfoGain bidez ordenatu
-        Instances reorganizedData = reorderAttributesByDictionary(rankedData); // Reorder attributes in TrainBoW based on the updated dictionary (updated by the rank of InfoGain)
+        Instances reorganizedData = reorderAttributesByDictionary(rankedData); // Reorder attributes in TrainBoW based on the dictionary updated by the rank of InfoGain
         Instances normalizedData = normalizeData(reorganizedData); // Datuak normalizatu
         
         normalizedData.setClassIndex(0); // Klase atributua lehen atributua izan dadila
