@@ -89,10 +89,17 @@ public class iragarri {
                 // Escribir predicciones
                 for (int i = 0; i < instantzia.numInstances(); i++) {
                     Instance instance = instantzia.instance(i);
+                
+                    // Obtener la predicción y la distribución de probabilidades
                     double prediction = model.classifyInstance(instance);
-                    boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
-                    // Escribir línea formateada
-                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                    double[] distribution = model.distributionForInstance(instance);
+                    double confidence = distribution[1]; // Probabilidad de la clase "Pos"
+                
+                    // Determinar la clase predicha
+                    String predictedClass = instance.classAttribute().value((int) prediction);
+                
+                    // Escribir la predicción en el archivo
+                    writer.write((i + 1) + ". instantzia: konf: %" + String.format("%.2f", confidence * 100) + " k: " + predictedClass + "\n");
                 }
                 System.out.println("Predictions saved to: " + outputFilePath);
             } catch (IOException e) {
@@ -108,10 +115,17 @@ public class iragarri {
                 // Escribir predicciones
                 for (int i = 0; i < instantzia.numInstances(); i++) {
                     Instance instance = instantzia.instance(i);
+                
+                    // Obtener la predicción y la distribución de probabilidades
                     double prediction = model.classifyInstance(instance);
-                    boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
-                    // Escribir línea formateada
-                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                    double[] distribution = model.distributionForInstance(instance);
+                    double confidence = distribution[1]; // Probabilidad de la clase "Pos"
+                
+                    // Determinar la clase predicha
+                    String predictedClass = instance.classAttribute().value((int) prediction);
+                
+                    // Escribir la predicción en el archivo
+                    writer.write((i + 1) + ". instantzia: konf: %" + String.format("%.2f", confidence * 100) + " k: " + predictedClass + "\n");
                 }
                 System.out.println("Predictions saved to: " + outputFilePath);
             } catch (IOException e) {
@@ -127,10 +141,17 @@ public class iragarri {
                 // Escribir predicciones
                 for (int i = 0; i < instantzia.numInstances(); i++) {
                     Instance instance = instantzia.instance(i);
+                
+                    // Obtener la predicción y la distribución de probabilidades
                     double prediction = model.classifyInstance(instance);
-                    boolean predictedClass = prediction > 0.5; // true for Pos, false for Neg
-                    // Escribir línea formateada
-                    writer.write((i + 1) + ". instantzia: " + (predictedClass ? "Pos" : "Neg")+"\n");
+                    double[] distribution = model.distributionForInstance(instance);
+                    double confidence = distribution[1]; // Probabilidad de la clase "Pos"
+                
+                    // Determinar la clase predicha
+                    String predictedClass = instance.classAttribute().value((int) prediction);
+                
+                    // Escribir la predicción en el archivo
+                    writer.write((i + 1) + ". instantzia: konf: %" + String.format("%.2f", confidence * 100) + " k: " + predictedClass + "\n");
                 }
                 System.out.println("Predictions saved to: " + outputFilePath);
             } catch (IOException e) {
