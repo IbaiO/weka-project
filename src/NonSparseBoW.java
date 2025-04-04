@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import weka.attributeSelection.AttributeSelection;
@@ -39,7 +40,46 @@ public class NonSparseBoW {
         Instances BoWData = transformToBoW(data);
         Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
         Instances filteredData = filterAttributesByInfoGain(NonSparseBoWData);
-        return filteredData;
+        Instances rankedData = rankAttributesByInfoGain(filteredData);        
+        rankedData.randomize(new java.util.Random(81)); //Randomized by seed 81
+        return rankedData;
+    }
+
+    public Instances transformDevTest(Instances data) {
+        try {
+            // Preprocesar los datos
+            Instances datuak = datu_garbiketa(data);
+            datuak.setClassIndex(datuak.numAttributes() - 1); // Azken atributua klasea da
+
+            FixedDictionaryStringToWordVector filter = new FixedDictionaryStringToWordVector();
+            filter.setDictionaryFile(new File("datuak/dictionary.txt")); // Cargar el diccionario desde el archivo
+            filter.setLowerCaseTokens(true); // Convertir texto a minúsculas
+            filter.setOutputWordCounts(false); // Usar presencia binaria en lugar de conteo de palabras
+            filter.setAttributeIndices("first"); // Aplicar a todos los atributos
+
+            try {
+                // Configurar el formato de entrada del filtro
+                filter.setInputFormat(datuak);
+
+                // Aplicar el filtro a las instancias
+                Instances filteredData = Filter.useFilter(datuak, filter);
+                filteredData.setClassIndex(filteredData.numAttributes() - 1); // Set the class index
+
+                // Continuar con el procesamiento
+                Instances NonSparseBoWData = transformToBoWNonSparse(filteredData);
+                NonSparseBoWData.setClassIndex(0); // Set the class index 
+                NonSparseBoWData.randomize(new Random(81)); //Randomized by seed 81
+                return NonSparseBoWData;
+            } catch (Exception e) {
+                System.out.println("ERROREA: Ezin izan da FixedDictionaryStringToWordVector iragazkia burutu.");
+                e.printStackTrace();
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da transformDevTest metodoa burutu.");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private Instances datu_garbiketa(Instances datuak) {
@@ -64,38 +104,6 @@ public class NonSparseBoW {
         }
 
         return datuak;
-    }
-
-    private Instances filterAttributes(Instances datuak) {
-        // Use the AttributeSelection class to perform feature selection
-        AttributeSelection attributeSelection = new AttributeSelection();
-        CfsSubsetEval evaluator = new CfsSubsetEval();
-        BestFirst search = new BestFirst();
-
-        try {
-            attributeSelection.setEvaluator(evaluator);
-            attributeSelection.setSearch(search);
-            attributeSelection.SelectAttributes(datuak);
-
-            // Get the selected attributes
-            int[] selectedAttributes = attributeSelection.selectedAttributes();
-            System.out.println("Selected attributes: ");
-            for (int i = 0; i < selectedAttributes.length; i++) {
-                System.out.print(selectedAttributes[i] + " ");
-            }
-
-            // Apply the filter to the training set
-            System.out.println("Number of attributes before feature selection: " + datuak.numAttributes());
-            Instances filteredTrain = attributeSelection.reduceDimensionality(datuak);
-            System.out.println("Number of attributes after feature selection: " + filteredTrain.numAttributes());
-
-            return filteredTrain;
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da datu garbiketa burutu.");
-            e.printStackTrace();
-            System.exit(1);
-            return null;
-        }
     }
 
     private Instances filterAttributesByInfoGain(Instances datuak) {
@@ -220,50 +228,40 @@ public class NonSparseBoW {
         }
     }
 
-    public Instances transformDevTest(Instances data) {
+    private Instances rankAttributesByInfoGain(Instances datuak) {
         try {
-            // Preprocesar los datos
-            Instances datuak = datu_garbiketa(data);
-            datuak.setClassIndex(datuak.numAttributes() - 1); // Azken atributua klasea da
+            // Configurar el evaluador de InfoGain
+            InfoGainAttributeEval evaluator = new InfoGainAttributeEval();
 
-            FixedDictionaryStringToWordVector filter = new FixedDictionaryStringToWordVector();
-            filter.setDictionaryFile(new File("datuak/dictionary.txt")); // Cargar el diccionario desde el archivo
-            filter.setLowerCaseTokens(true); // Convertir texto a minúsculas
-            filter.setOutputWordCounts(false); // Usar presencia binaria en lugar de conteo de palabras
-            filter.setAttributeIndices("first"); // Aplicar a todos los atributos
+            // Configurar el método de búsqueda BestFirst
+            BestFirst search = new BestFirst();
+            search.setSearchTermination(5); // Configurar el número de terminaciones sin mejora
 
-            try {
-                // Configurar el formato de entrada del filtro
-                filter.setInputFormat(datuak);
+            // Configurar AttributeSelection
+            AttributeSelection attributeSelection = new AttributeSelection();
+            attributeSelection.setEvaluator(evaluator);
+            attributeSelection.setSearch(search);
 
-                // Aplicar el filtro a las instancias
-                Instances filteredData = Filter.useFilter(datuak, filter);
-                filteredData.setClassIndex(filteredData.numAttributes() - 1); // Set the class index
+            // Aplicar AttributeSelection al conjunto de datos
+            attributeSelection.SelectAttributes(datuak);
 
-                // Continuar con el procesamiento
-                Instances NonSparseBoWData = transformToBoWNonSparse(filteredData);
-                NonSparseBoWData.setClassIndex(0); // Set the class index
-                return NonSparseBoWData;
-            } catch (Exception e) {
-                System.out.println("ERROREA: Ezin izan da FixedDictionaryStringToWordVector iragazkia burutu.");
-                e.printStackTrace();
-                return null;
+            // Obtener los índices de los atributos seleccionados
+            int[] rankedAttributes = attributeSelection.selectedAttributes();
+
+            // Imprimir los atributos ordenados por importancia
+            System.out.println("Atributos ordenados por InfoGain:");
+            for (int i = 0; i < rankedAttributes.length; i++) {
+                System.out.println((i + 1) + ". " + datuak.attribute(rankedAttributes[i]).name());
             }
+
+            // Crear un nuevo conjunto de datos con los atributos seleccionados
+            Instances rankedData = attributeSelection.reduceDimensionality(datuak);
+
+            return rankedData;
         } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da transformDevTest metodoa burutu.");
+            System.out.println("ERROREA: Ezin izan da atributuak ordenatu InfoGain bidez.");
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            DataSource source = new DataSource("datuak/datuakTrain.arff");
-            Instances data = source.getDataSet();
-            NonSparseBoW.getNonSparseBoW().transformTrain(data);
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da datu multzoa kargatu.");
-            e.printStackTrace();
         }
     }
 }
