@@ -4,6 +4,8 @@ import weka.classifiers.functions.SMO;
 import weka.classifiers.Evaluation;
 
 import weka.core.Instances;
+import weka.filters.Filter;
+
 import java.util.Random;
 
 public class sMO {
@@ -19,24 +21,21 @@ public class sMO {
             return null;
         }
 
-        // Verificar si el atributo de clase es nominal o numérico
-        if (dataset.classAttribute().isNominal()) {
-            System.out.println("The class attribute is nominal.");
-        } else if (dataset.classAttribute().isNumeric()) {
-            System.out.println("The class attribute is numeric.");
-        } else {
-            System.out.println("The class attribute is neither nominal nor numeric.");
-        }
-        dataset.setClassIndex(0); // Set the class attribute index
+        weka.filters.supervised.instance.Resample resample = new weka.filters.supervised.instance.Resample();
+        resample.setBiasToUniformClass(1.0); // Balancear las clases para mejorar el resultado
+        resample.setInputFormat(dataset);
+        Instances balancedTrainSet = Filter.useFilter(dataset, resample);
+
+        balancedTrainSet.setClassIndex(0); // Set the class attribute index
         // Comparar diferentes kernels y optimizar C
         System.out.println("Evaluating PolyKernel...");
-        SMO polyKernelModel = evaluateKernel(dataset, new weka.classifiers.functions.supportVector.PolyKernel(), 2); // E = 2
+        SMO polyKernelModel = evaluateKernel(balancedTrainSet, new weka.classifiers.functions.supportVector.PolyKernel(), 2); // E = 2
 
         System.out.println("Evaluating RBFKernel...");
-        SMO rbfKernelModel = evaluateKernel(dataset, new weka.classifiers.functions.supportVector.RBFKernel(), 0.01); // Gamma = 0.1
+        SMO rbfKernelModel = evaluateKernel(balancedTrainSet, new weka.classifiers.functions.supportVector.RBFKernel(), 0.01); // Gamma = 0.1
 
         System.out.println("Evaluating PukKernel...");
-        SMO pukKernelModel = evaluateKernel(dataset, new weka.classifiers.functions.supportVector.Puk(), 1.0); // Omega = 1.0
+        SMO pukKernelModel = evaluateKernel(balancedTrainSet, new weka.classifiers.functions.supportVector.Puk(), 1.0); // Omega = 1.0
 
 
         // Crear un arreglo para almacenar los modelos evaluados
@@ -47,8 +46,8 @@ public class sMO {
     }
 
     private static SMO evaluateKernel(Instances train, weka.classifiers.functions.supportVector.Kernel kernel, double kernelParam) throws Exception {
-        double[] cValues = {0.1, 1, 10}; // Valores de C a probar
-        double[] gammaValues = {0.001, 0.01, 0.1, 1}; // Rango más razonable
+        double[] cValues = {0.1, 1, 10}; // Ampliar rango de C
+        double[] gammaValues = {0.0001, 0.001, 0.01, 0.1}; // Ampliar rango de Gamma
         double[] exponentValues = {1, 2, 3}; // Valores de Exponent (para PolyKernel)
         double[] omegaValues = {0.5, 1.0, 2.0}; // Valores de Omega (para PukKernel)
         double[] sigmaValues = {0.5, 1.0, 2.0}; // Valores de Sigma (para PukKernel)

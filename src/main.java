@@ -18,21 +18,35 @@ public class main {
             System.out.println("Erabilera: java -jar weka-project.jar <input karpetaren path-a> <output file-a (extentzio gabe)>");
             System.exit(0);
         }
-        String inputPath = args[0]; System.out.println("Sarrerako fitxategia: " + inputPath);
-        String outputFile = args[1]; System.out.println("Irteerako fitxategia: " + outputFile);
+        String inputPath = args[0];
+        System.out.println("Sarrerako fitxategia: " + inputPath);
+        String outputFile = args[1];
+        System.out.println("Irteerako fitxategia: " + outputFile);
         Instances instances[] = null;
-        
+
         // Configurar netlib-java para usar implementaciones en Java puro
         System.setProperty("com.github.fommil.netlib.BLAS", "com.github.fommil.netlib.F2jBLAS");
         System.setProperty("com.github.fommil.netlib.LAPACK", "com.github.fommil.netlib.F2jLAPACK");
 
         ///////////// PROCESAMENDUA /////////////
         instances = datuBilketa.getDB().bildu(inputPath, outputFile);
-        iragarri.main(instances[0], instances[2], "Dev");
+
+        // Preprocesar el conjunto de desarrollo (Dev) // (no se si es necesario)
+        instances[1] = NonSparseBoW.getNonSparseBoW().transformDevTest(instances[1]);
+
+        // Realizar predicciones para Dev
+        iragarri.main(instances[0], instances[1], "Dev");
+
+        // Combinar Train y Dev para Test
         Instances trainDev = new Instances(instances[0]);
         trainDev.addAll(instances[1]);
+
+        // Preprocesar el conjunto de prueba (Test) //  (no se si es necesario)
+        instances[3] = NonSparseBoW.getNonSparseBoW().transformDevTest(instances[3]);
+
+        // Realizar predicciones para Test
         iragarri.main(trainDev, instances[3], "Test");
-        
+
         ///////////// ACCURACY KALKULATU /////////////
         File emaitzakDir = new File("src/emaitzak");
         if (emaitzakDir.isDirectory()) {
@@ -68,18 +82,18 @@ public class main {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // Skip lines that do not contain predictions
+                // Saltar líneas que no contienen predicciones
                 if (!line.contains("instantzia:")) {
                     continue;
                 }
 
-                // Extract the predicted class from the line
+                // Extraer la clase predicha de la línea
                 String predictedClass = line.trim().endsWith("Pos") ? "pos" : "neg";
 
-                // Get the actual class from the Dev dataset
+                // Obtener la clase real del conjunto de desarrollo
                 String actualClass = devSet.instance(instanceIndex).stringValue(devSet.classIndex());
 
-                // Compare the predicted class with the actual class
+                // Comparar la clase predicha con la clase real
                 if (predictedClass.equalsIgnoreCase(actualClass)) {
                     correctPredictions++;
                 }
@@ -87,7 +101,12 @@ public class main {
                 instanceIndex++;
             }
 
-            // Calculate accuracy as a percentage
+            // Verificar que el número de predicciones coincida con el número de instancias
+            if (instanceIndex != totalInstances) {
+                System.out.println("Warning: El número de predicciones no coincide con el número de instancias en el conjunto de desarrollo.");
+            }
+
+            // Calcular el accuracy como porcentaje
             double accuracy = (double) correctPredictions / totalInstances * 100;
             System.out.println("Accuracy: " + String.format("%.2f", accuracy) + "%");
             return accuracy;

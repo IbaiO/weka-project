@@ -39,21 +39,23 @@ public class NonSparseBoW {
 
     public Instances transformTrain(Instances data) {
         Instances dataGarbi = datu_garbiketa(data);
-        Instances BoWData = transformToBoW(data);
+        Instances BoWData = transformToBoW(dataGarbi);
         Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
         Instances filteredData = filterAttributesByInfoGain(NonSparseBoWData);
         Instances rankedData = rankAttributesByInfoGain(filteredData);
 
-        // Reorder attributes in TrainBoW based on the updated dictionary
-        rankedData = reorderAttributesByDictionary(rankedData);
+        // Normalizar los datos (no se si necesario)
+        Instances normalizedData = normalizeData(rankedData);
 
-        rankedData.randomize(new java.util.Random(81)); // Randomized by seed 81
-        return rankedData;
+        // Reorder attributes in TrainBoW based on the updated dictionary
+        normalizedData = reorderAttributesByDictionary(normalizedData);
+
+        normalizedData.randomize(new java.util.Random(81)); // Randomized by seed 81
+        return normalizedData;
     }
 
     public Instances transformDevTest(Instances data) {
         try {
-            // Preprocesar los datos
             Instances datuak = datu_garbiketa(data);
             datuak.setClassIndex(datuak.numAttributes() - 1); // Azken atributua klasea da
 
@@ -63,24 +65,18 @@ public class NonSparseBoW {
             filter.setOutputWordCounts(false); // Usar presencia binaria en lugar de conteo de palabras
             filter.setAttributeIndices("first"); // Aplicar a todos los atributos
 
-            try {
-                // Configurar el formato de entrada del filtro
-                filter.setInputFormat(datuak);
+            filter.setInputFormat(datuak);
+            Instances filteredData = Filter.useFilter(datuak, filter);
+            filteredData.setClassIndex(filteredData.numAttributes() - 1); // Set the class index
 
-                // Aplicar el filtro a las instancias
-                Instances filteredData = Filter.useFilter(datuak, filter);
-                filteredData.setClassIndex(filteredData.numAttributes() - 1); // Set the class index
+            Instances NonSparseBoWData = transformToBoWNonSparse(filteredData);
 
-                // Continuar con el procesamiento
-                Instances NonSparseBoWData = transformToBoWNonSparse(filteredData);
-                NonSparseBoWData.setClassIndex(0); // Set the class index 
-                NonSparseBoWData.randomize(new Random(81)); //Randomized by seed 81
-                return NonSparseBoWData;
-            } catch (Exception e) {
-                System.out.println("ERROREA: Ezin izan da FixedDictionaryStringToWordVector iragazkia burutu.");
-                e.printStackTrace();
-                return null;
-            }
+            // Normalizar los datos
+            Instances normalizedData = normalizeData(NonSparseBoWData);
+
+            normalizedData.setClassIndex(0); // Set the class index 
+            normalizedData.randomize(new Random(81)); // Randomized by seed 81
+            return normalizedData;
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da transformDevTest metodoa burutu.");
             e.printStackTrace();
@@ -362,6 +358,18 @@ public class NonSparseBoW {
             System.out.println("ERROREA: Ezin izan dira atributuak berrantolatu dictionary.txt fitxategiaren arabera.");
             e.printStackTrace();
             return data; // Return the original data if reordering fails
+        }
+    }
+
+    private Instances normalizeData(Instances data) {
+        try {
+            weka.filters.unsupervised.attribute.Normalize normalize = new weka.filters.unsupervised.attribute.Normalize();
+            normalize.setInputFormat(data);
+            return Filter.useFilter(data, normalize);
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da datuak normalizatu.");
+            e.printStackTrace();
+            return data; // Return original data if normalization fails
         }
     }
 }

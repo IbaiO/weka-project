@@ -6,8 +6,8 @@ import weka.classifiers.functions.SMO;
 
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.filters.unsupervised.attribute.StringToWordVector;
-import weka.filters.Filter;
+//import weka.filters.unsupervised.attribute.StringToWordVector;
+//import weka.filters.Filter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

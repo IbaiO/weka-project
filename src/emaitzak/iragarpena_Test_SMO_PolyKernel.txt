@@ -1,400 +1,400 @@
-1. instantzia: Neg
-2. instantzia: Neg
-3. instantzia: Pos
-4. instantzia: Pos
-5. instantzia: Neg
-6. instantzia: Neg
-7. instantzia: Neg
-8. instantzia: Pos
-9. instantzia: Pos
-10. instantzia: Pos
-11. instantzia: Pos
-12. instantzia: Neg
-13. instantzia: Pos
-14. instantzia: Pos
-15. instantzia: Neg
-16. instantzia: Pos
-17. instantzia: Pos
-18. instantzia: Pos
-19. instantzia: Neg
-20. instantzia: Pos
-21. instantzia: Neg
-22. instantzia: Pos
-23. instantzia: Neg
-24. instantzia: Pos
-25. instantzia: Neg
-26. instantzia: Pos
-27. instantzia: Pos
-28. instantzia: Pos
-29. instantzia: Neg
-30. instantzia: Neg
-31. instantzia: Neg
-32. instantzia: Pos
-33. instantzia: Pos
-34. instantzia: Neg
-35. instantzia: Neg
-36. instantzia: Pos
-37. instantzia: Pos
-38. instantzia: Neg
-39. instantzia: Pos
-40. instantzia: Pos
-41. instantzia: Pos
-42. instantzia: Neg
-43. instantzia: Neg
-44. instantzia: Neg
-45. instantzia: Pos
-46. instantzia: Neg
-47. instantzia: Pos
-48. instantzia: Neg
-49. instantzia: Pos
-50. instantzia: Neg
-51. instantzia: Pos
-52. instantzia: Neg
-53. instantzia: Pos
-54. instantzia: Neg
-55. instantzia: Neg
-56. instantzia: Pos
-57. instantzia: Pos
-58. instantzia: Pos
-59. instantzia: Neg
-60. instantzia: Neg
-61. instantzia: Neg
-62. instantzia: Pos
-63. instantzia: Pos
-64. instantzia: Neg
-65. instantzia: Pos
-66. instantzia: Pos
-67. instantzia: Pos
-68. instantzia: Pos
-69. instantzia: Neg
-70. instantzia: Pos
-71. instantzia: Pos
-72. instantzia: Pos
-73. instantzia: Pos
-74. instantzia: Neg
-75. instantzia: Neg
-76. instantzia: Pos
-77. instantzia: Pos
-78. instantzia: Neg
-79. instantzia: Pos
-80. instantzia: Neg
-81. instantzia: Pos
-82. instantzia: Neg
-83. instantzia: Pos
-84. instantzia: Neg
-85. instantzia: Neg
-86. instantzia: Pos
-87. instantzia: Neg
-88. instantzia: Pos
-89. instantzia: Neg
-90. instantzia: Pos
-91. instantzia: Neg
-92. instantzia: Pos
-93. instantzia: Neg
-94. instantzia: Pos
-95. instantzia: Pos
-96. instantzia: Pos
-97. instantzia: Neg
-98. instantzia: Pos
-99. instantzia: Pos
-100. instantzia: Pos
-101. instantzia: Neg
-102. instantzia: Pos
-103. instantzia: Pos
-104. instantzia: Pos
-105. instantzia: Neg
-106. instantzia: Neg
-107. instantzia: Neg
-108. instantzia: Pos
-109. instantzia: Neg
-110. instantzia: Pos
-111. instantzia: Pos
-112. instantzia: Neg
-113. instantzia: Neg
-114. instantzia: Neg
-115. instantzia: Pos
-116. instantzia: Pos
-117. instantzia: Pos
-118. instantzia: Neg
-119. instantzia: Neg
-120. instantzia: Neg
-121. instantzia: Neg
-122. instantzia: Neg
-123. instantzia: Neg
-124. instantzia: Pos
-125. instantzia: Pos
-126. instantzia: Pos
-127. instantzia: Pos
-128. instantzia: Pos
-129. instantzia: Pos
-130. instantzia: Neg
-131. instantzia: Pos
-132. instantzia: Pos
-133. instantzia: Neg
-134. instantzia: Pos
-135. instantzia: Pos
-136. instantzia: Pos
-137. instantzia: Neg
-138. instantzia: Neg
-139. instantzia: Pos
-140. instantzia: Pos
-141. instantzia: Neg
-142. instantzia: Pos
-143. instantzia: Neg
-144. instantzia: Neg
-145. instantzia: Pos
-146. instantzia: Pos
-147. instantzia: Pos
-148. instantzia: Pos
-149. instantzia: Neg
-150. instantzia: Neg
-151. instantzia: Neg
-152. instantzia: Neg
-153. instantzia: Pos
-154. instantzia: Pos
-155. instantzia: Neg
-156. instantzia: Pos
-157. instantzia: Pos
-158. instantzia: Pos
-159. instantzia: Neg
-160. instantzia: Pos
-161. instantzia: Pos
-162. instantzia: Neg
-163. instantzia: Pos
-164. instantzia: Neg
-165. instantzia: Neg
-166. instantzia: Neg
-167. instantzia: Pos
-168. instantzia: Neg
-169. instantzia: Pos
-170. instantzia: Pos
-171. instantzia: Neg
-172. instantzia: Neg
-173. instantzia: Pos
-174. instantzia: Neg
-175. instantzia: Pos
-176. instantzia: Pos
-177. instantzia: Pos
-178. instantzia: Pos
-179. instantzia: Pos
-180. instantzia: Pos
-181. instantzia: Neg
-182. instantzia: Pos
-183. instantzia: Pos
-184. instantzia: Pos
-185. instantzia: Neg
-186. instantzia: Neg
-187. instantzia: Pos
-188. instantzia: Pos
-189. instantzia: Neg
-190. instantzia: Neg
-191. instantzia: Neg
-192. instantzia: Neg
-193. instantzia: Neg
-194. instantzia: Pos
-195. instantzia: Pos
-196. instantzia: Pos
-197. instantzia: Pos
-198. instantzia: Pos
-199. instantzia: Neg
-200. instantzia: Neg
-201. instantzia: Pos
-202. instantzia: Neg
-203. instantzia: Pos
-204. instantzia: Pos
-205. instantzia: Pos
-206. instantzia: Pos
-207. instantzia: Pos
-208. instantzia: Pos
-209. instantzia: Pos
-210. instantzia: Pos
-211. instantzia: Neg
-212. instantzia: Pos
-213. instantzia: Neg
-214. instantzia: Pos
-215. instantzia: Neg
-216. instantzia: Pos
-217. instantzia: Pos
-218. instantzia: Neg
-219. instantzia: Pos
-220. instantzia: Neg
-221. instantzia: Neg
-222. instantzia: Neg
-223. instantzia: Neg
-224. instantzia: Pos
-225. instantzia: Neg
-226. instantzia: Neg
-227. instantzia: Neg
-228. instantzia: Neg
-229. instantzia: Pos
-230. instantzia: Neg
-231. instantzia: Neg
-232. instantzia: Pos
-233. instantzia: Neg
-234. instantzia: Pos
-235. instantzia: Pos
-236. instantzia: Pos
-237. instantzia: Pos
-238. instantzia: Pos
-239. instantzia: Pos
-240. instantzia: Pos
-241. instantzia: Pos
-242. instantzia: Neg
-243. instantzia: Neg
-244. instantzia: Pos
-245. instantzia: Pos
-246. instantzia: Neg
-247. instantzia: Pos
-248. instantzia: Neg
-249. instantzia: Pos
-250. instantzia: Neg
-251. instantzia: Pos
-252. instantzia: Neg
-253. instantzia: Neg
-254. instantzia: Pos
-255. instantzia: Pos
-256. instantzia: Neg
-257. instantzia: Pos
-258. instantzia: Neg
-259. instantzia: Neg
-260. instantzia: Pos
-261. instantzia: Neg
-262. instantzia: Pos
-263. instantzia: Neg
-264. instantzia: Neg
-265. instantzia: Pos
-266. instantzia: Neg
-267. instantzia: Pos
-268. instantzia: Neg
-269. instantzia: Pos
-270. instantzia: Pos
-271. instantzia: Pos
-272. instantzia: Pos
-273. instantzia: Neg
-274. instantzia: Neg
-275. instantzia: Neg
-276. instantzia: Neg
-277. instantzia: Neg
-278. instantzia: Pos
-279. instantzia: Neg
-280. instantzia: Neg
-281. instantzia: Neg
-282. instantzia: Neg
-283. instantzia: Pos
-284. instantzia: Neg
-285. instantzia: Neg
-286. instantzia: Neg
-287. instantzia: Pos
-288. instantzia: Pos
-289. instantzia: Neg
-290. instantzia: Pos
-291. instantzia: Neg
-292. instantzia: Pos
-293. instantzia: Neg
-294. instantzia: Pos
-295. instantzia: Pos
-296. instantzia: Neg
-297. instantzia: Neg
-298. instantzia: Pos
-299. instantzia: Neg
-300. instantzia: Pos
-301. instantzia: Pos
-302. instantzia: Pos
-303. instantzia: Pos
-304. instantzia: Pos
-305. instantzia: Neg
-306. instantzia: Pos
-307. instantzia: Neg
-308. instantzia: Neg
-309. instantzia: Neg
-310. instantzia: Pos
-311. instantzia: Pos
-312. instantzia: Neg
-313. instantzia: Neg
-314. instantzia: Neg
-315. instantzia: Neg
-316. instantzia: Pos
-317. instantzia: Neg
-318. instantzia: Pos
-319. instantzia: Neg
-320. instantzia: Neg
-321. instantzia: Neg
-322. instantzia: Neg
-323. instantzia: Pos
-324. instantzia: Neg
-325. instantzia: Neg
-326. instantzia: Pos
-327. instantzia: Pos
-328. instantzia: Neg
-329. instantzia: Pos
-330. instantzia: Neg
-331. instantzia: Neg
-332. instantzia: Pos
-333. instantzia: Neg
-334. instantzia: Pos
-335. instantzia: Neg
-336. instantzia: Neg
-337. instantzia: Pos
-338. instantzia: Neg
-339. instantzia: Pos
-340. instantzia: Neg
-341. instantzia: Pos
-342. instantzia: Pos
-343. instantzia: Pos
-344. instantzia: Pos
-345. instantzia: Neg
-346. instantzia: Neg
-347. instantzia: Pos
-348. instantzia: Pos
-349. instantzia: Neg
-350. instantzia: Pos
-351. instantzia: Neg
-352. instantzia: Pos
-353. instantzia: Pos
-354. instantzia: Pos
-355. instantzia: Pos
-356. instantzia: Neg
-357. instantzia: Neg
-358. instantzia: Pos
-359. instantzia: Pos
-360. instantzia: Pos
-361. instantzia: Neg
-362. instantzia: Neg
-363. instantzia: Pos
-364. instantzia: Pos
-365. instantzia: Neg
-366. instantzia: Neg
-367. instantzia: Pos
-368. instantzia: Pos
-369. instantzia: Pos
-370. instantzia: Neg
-371. instantzia: Neg
-372. instantzia: Pos
-373. instantzia: Neg
-374. instantzia: Pos
-375. instantzia: Pos
-376. instantzia: Neg
-377. instantzia: Pos
-378. instantzia: Neg
-379. instantzia: Neg
-380. instantzia: Pos
-381. instantzia: Pos
-382. instantzia: Neg
-383. instantzia: Neg
-384. instantzia: Neg
-385. instantzia: Neg
-386. instantzia: Pos
-387. instantzia: Neg
-388. instantzia: Neg
-389. instantzia: Pos
-390. instantzia: Pos
-391. instantzia: Pos
-392. instantzia: Neg
-393. instantzia: Neg
-394. instantzia: Pos
-395. instantzia: Pos
-396. instantzia: Pos
-397. instantzia: Neg
-398. instantzia: Neg
-399. instantzia: Pos
-400. instantzia: Pos
+1. instantzia: konf: %0,00 k: neg
+2. instantzia: konf: %0,00 k: neg
+3. instantzia: konf: %0,00 k: neg
+4. instantzia: konf: %100,00 k: pos
+5. instantzia: konf: %100,00 k: pos
+6. instantzia: konf: %0,00 k: neg
+7. instantzia: konf: %100,00 k: pos
+8. instantzia: konf: %100,00 k: pos
+9. instantzia: konf: %100,00 k: pos
+10. instantzia: konf: %0,00 k: neg
+11. instantzia: konf: %100,00 k: pos
+12. instantzia: konf: %0,00 k: neg
+13. instantzia: konf: %0,00 k: neg
+14. instantzia: konf: %100,00 k: pos
+15. instantzia: konf: %100,00 k: pos
+16. instantzia: konf: %100,00 k: pos
+17. instantzia: konf: %0,00 k: neg
+18. instantzia: konf: %100,00 k: pos
+19. instantzia: konf: %100,00 k: pos
+20. instantzia: konf: %0,00 k: neg
+21. instantzia: konf: %0,00 k: neg
+22. instantzia: konf: %0,00 k: neg
+23. instantzia: konf: %100,00 k: pos
+24. instantzia: konf: %0,00 k: neg
+25. instantzia: konf: %100,00 k: pos
+26. instantzia: konf: %100,00 k: pos
+27. instantzia: konf: %0,00 k: neg
+28. instantzia: konf: %0,00 k: neg
+29. instantzia: konf: %100,00 k: pos
+30. instantzia: konf: %0,00 k: neg
+31. instantzia: konf: %0,00 k: neg
+32. instantzia: konf: %0,00 k: neg
+33. instantzia: konf: %0,00 k: neg
+34. instantzia: konf: %0,00 k: neg
+35. instantzia: konf: %0,00 k: neg
+36. instantzia: konf: %100,00 k: pos
+37. instantzia: konf: %100,00 k: pos
+38. instantzia: konf: %100,00 k: pos
+39. instantzia: konf: %100,00 k: pos
+40. instantzia: konf: %0,00 k: neg
+41. instantzia: konf: %100,00 k: pos
+42. instantzia: konf: %0,00 k: neg
+43. instantzia: konf: %100,00 k: pos
+44. instantzia: konf: %100,00 k: pos
+45. instantzia: konf: %0,00 k: neg
+46. instantzia: konf: %0,00 k: neg
+47. instantzia: konf: %100,00 k: pos
+48. instantzia: konf: %0,00 k: neg
+49. instantzia: konf: %0,00 k: neg
+50. instantzia: konf: %100,00 k: pos
+51. instantzia: konf: %100,00 k: pos
+52. instantzia: konf: %100,00 k: pos
+53. instantzia: konf: %0,00 k: neg
+54. instantzia: konf: %100,00 k: pos
+55. instantzia: konf: %100,00 k: pos
+56. instantzia: konf: %100,00 k: pos
+57. instantzia: konf: %100,00 k: pos
+58. instantzia: konf: %100,00 k: pos
+59. instantzia: konf: %100,00 k: pos
+60. instantzia: konf: %100,00 k: pos
+61. instantzia: konf: %100,00 k: pos
+62. instantzia: konf: %0,00 k: neg
+63. instantzia: konf: %0,00 k: neg
+64. instantzia: konf: %100,00 k: pos
+65. instantzia: konf: %0,00 k: neg
+66. instantzia: konf: %100,00 k: pos
+67. instantzia: konf: %100,00 k: pos
+68. instantzia: konf: %100,00 k: pos
+69. instantzia: konf: %100,00 k: pos
+70. instantzia: konf: %0,00 k: neg
+71. instantzia: konf: %100,00 k: pos
+72. instantzia: konf: %100,00 k: pos
+73. instantzia: konf: %100,00 k: pos
+74. instantzia: konf: %100,00 k: pos
+75. instantzia: konf: %0,00 k: neg
+76. instantzia: konf: %100,00 k: pos
+77. instantzia: konf: %100,00 k: pos
+78. instantzia: konf: %0,00 k: neg
+79. instantzia: konf: %0,00 k: neg
+80. instantzia: konf: %100,00 k: pos
+81. instantzia: konf: %100,00 k: pos
+82. instantzia: konf: %100,00 k: pos
+83. instantzia: konf: %100,00 k: pos
+84. instantzia: konf: %100,00 k: pos
+85. instantzia: konf: %0,00 k: neg
+86. instantzia: konf: %0,00 k: neg
+87. instantzia: konf: %0,00 k: neg
+88. instantzia: konf: %100,00 k: pos
+89. instantzia: konf: %100,00 k: pos
+90. instantzia: konf: %0,00 k: neg
+91. instantzia: konf: %0,00 k: neg
+92. instantzia: konf: %100,00 k: pos
+93. instantzia: konf: %0,00 k: neg
+94. instantzia: konf: %0,00 k: neg
+95. instantzia: konf: %100,00 k: pos
+96. instantzia: konf: %100,00 k: pos
+97. instantzia: konf: %0,00 k: neg
+98. instantzia: konf: %0,00 k: neg
+99. instantzia: konf: %100,00 k: pos
+100. instantzia: konf: %100,00 k: pos
+101. instantzia: konf: %0,00 k: neg
+102. instantzia: konf: %100,00 k: pos
+103. instantzia: konf: %100,00 k: pos
+104. instantzia: konf: %0,00 k: neg
+105. instantzia: konf: %100,00 k: pos
+106. instantzia: konf: %0,00 k: neg
+107. instantzia: konf: %0,00 k: neg
+108. instantzia: konf: %100,00 k: pos
+109. instantzia: konf: %0,00 k: neg
+110. instantzia: konf: %100,00 k: pos
+111. instantzia: konf: %0,00 k: neg
+112. instantzia: konf: %100,00 k: pos
+113. instantzia: konf: %0,00 k: neg
+114. instantzia: konf: %0,00 k: neg
+115. instantzia: konf: %100,00 k: pos
+116. instantzia: konf: %0,00 k: neg
+117. instantzia: konf: %0,00 k: neg
+118. instantzia: konf: %100,00 k: pos
+119. instantzia: konf: %100,00 k: pos
+120. instantzia: konf: %100,00 k: pos
+121. instantzia: konf: %0,00 k: neg
+122. instantzia: konf: %0,00 k: neg
+123. instantzia: konf: %100,00 k: pos
+124. instantzia: konf: %0,00 k: neg
+125. instantzia: konf: %100,00 k: pos
+126. instantzia: konf: %0,00 k: neg
+127. instantzia: konf: %100,00 k: pos
+128. instantzia: konf: %100,00 k: pos
+129. instantzia: konf: %100,00 k: pos
+130. instantzia: konf: %0,00 k: neg
+131. instantzia: konf: %100,00 k: pos
+132. instantzia: konf: %0,00 k: neg
+133. instantzia: konf: %100,00 k: pos
+134. instantzia: konf: %0,00 k: neg
+135. instantzia: konf: %100,00 k: pos
+136. instantzia: konf: %100,00 k: pos
+137. instantzia: konf: %0,00 k: neg
+138. instantzia: konf: %0,00 k: neg
+139. instantzia: konf: %0,00 k: neg
+140. instantzia: konf: %0,00 k: neg
+141. instantzia: konf: %0,00 k: neg
+142. instantzia: konf: %0,00 k: neg
+143. instantzia: konf: %100,00 k: pos
+144. instantzia: konf: %0,00 k: neg
+145. instantzia: konf: %100,00 k: pos
+146. instantzia: konf: %0,00 k: neg
+147. instantzia: konf: %0,00 k: neg
+148. instantzia: konf: %100,00 k: pos
+149. instantzia: konf: %100,00 k: pos
+150. instantzia: konf: %100,00 k: pos
+151. instantzia: konf: %100,00 k: pos
+152. instantzia: konf: %0,00 k: neg
+153. instantzia: konf: %0,00 k: neg
+154. instantzia: konf: %100,00 k: pos
+155. instantzia: konf: %0,00 k: neg
+156. instantzia: konf: %100,00 k: pos
+157. instantzia: konf: %100,00 k: pos
+158. instantzia: konf: %0,00 k: neg
+159. instantzia: konf: %100,00 k: pos
+160. instantzia: konf: %0,00 k: neg
+161. instantzia: konf: %0,00 k: neg
+162. instantzia: konf: %100,00 k: pos
+163. instantzia: konf: %100,00 k: pos
+164. instantzia: konf: %0,00 k: neg
+165. instantzia: konf: %0,00 k: neg
+166. instantzia: konf: %0,00 k: neg
+167. instantzia: konf: %0,00 k: neg
+168. instantzia: konf: %100,00 k: pos
+169. instantzia: konf: %0,00 k: neg
+170. instantzia: konf: %100,00 k: pos
+171. instantzia: konf: %0,00 k: neg
+172. instantzia: konf: %0,00 k: neg
+173. instantzia: konf: %0,00 k: neg
+174. instantzia: konf: %0,00 k: neg
+175. instantzia: konf: %100,00 k: pos
+176. instantzia: konf: %100,00 k: pos
+177. instantzia: konf: %100,00 k: pos
+178. instantzia: konf: %100,00 k: pos
+179. instantzia: konf: %100,00 k: pos
+180. instantzia: konf: %100,00 k: pos
+181. instantzia: konf: %0,00 k: neg
+182. instantzia: konf: %0,00 k: neg
+183. instantzia: konf: %100,00 k: pos
+184. instantzia: konf: %0,00 k: neg
+185. instantzia: konf: %100,00 k: pos
+186. instantzia: konf: %100,00 k: pos
+187. instantzia: konf: %100,00 k: pos
+188. instantzia: konf: %0,00 k: neg
+189. instantzia: konf: %0,00 k: neg
+190. instantzia: konf: %100,00 k: pos
+191. instantzia: konf: %100,00 k: pos
+192. instantzia: konf: %100,00 k: pos
+193. instantzia: konf: %0,00 k: neg
+194. instantzia: konf: %0,00 k: neg
+195. instantzia: konf: %100,00 k: pos
+196. instantzia: konf: %0,00 k: neg
+197. instantzia: konf: %100,00 k: pos
+198. instantzia: konf: %100,00 k: pos
+199. instantzia: konf: %0,00 k: neg
+200. instantzia: konf: %100,00 k: pos
+201. instantzia: konf: %100,00 k: pos
+202. instantzia: konf: %100,00 k: pos
+203. instantzia: konf: %100,00 k: pos
+204. instantzia: konf: %100,00 k: pos
+205. instantzia: konf: %100,00 k: pos
+206. instantzia: konf: %0,00 k: neg
+207. instantzia: konf: %100,00 k: pos
+208. instantzia: konf: %0,00 k: neg
+209. instantzia: konf: %0,00 k: neg
+210. instantzia: konf: %0,00 k: neg
+211. instantzia: konf: %100,00 k: pos
+212. instantzia: konf: %100,00 k: pos
+213. instantzia: konf: %100,00 k: pos
+214. instantzia: konf: %100,00 k: pos
+215. instantzia: konf: %100,00 k: pos
+216. instantzia: konf: %100,00 k: pos
+217. instantzia: konf: %0,00 k: neg
+218. instantzia: konf: %0,00 k: neg
+219. instantzia: konf: %0,00 k: neg
+220. instantzia: konf: %100,00 k: pos
+221. instantzia: konf: %100,00 k: pos
+222. instantzia: konf: %100,00 k: pos
+223. instantzia: konf: %0,00 k: neg
+224. instantzia: konf: %100,00 k: pos
+225. instantzia: konf: %100,00 k: pos
+226. instantzia: konf: %0,00 k: neg
+227. instantzia: konf: %100,00 k: pos
+228. instantzia: konf: %100,00 k: pos
+229. instantzia: konf: %0,00 k: neg
+230. instantzia: konf: %100,00 k: pos
+231. instantzia: konf: %100,00 k: pos
+232. instantzia: konf: %100,00 k: pos
+233. instantzia: konf: %100,00 k: pos
+234. instantzia: konf: %0,00 k: neg
+235. instantzia: konf: %100,00 k: pos
+236. instantzia: konf: %100,00 k: pos
+237. instantzia: konf: %0,00 k: neg
+238. instantzia: konf: %100,00 k: pos
+239. instantzia: konf: %100,00 k: pos
+240. instantzia: konf: %100,00 k: pos
+241. instantzia: konf: %100,00 k: pos
+242. instantzia: konf: %100,00 k: pos
+243. instantzia: konf: %0,00 k: neg
+244. instantzia: konf: %0,00 k: neg
+245. instantzia: konf: %0,00 k: neg
+246. instantzia: konf: %0,00 k: neg
+247. instantzia: konf: %100,00 k: pos
+248. instantzia: konf: %100,00 k: pos
+249. instantzia: konf: %100,00 k: pos
+250. instantzia: konf: %100,00 k: pos
+251. instantzia: konf: %0,00 k: neg
+252. instantzia: konf: %100,00 k: pos
+253. instantzia: konf: %100,00 k: pos
+254. instantzia: konf: %0,00 k: neg
+255. instantzia: konf: %100,00 k: pos
+256. instantzia: konf: %100,00 k: pos
+257. instantzia: konf: %0,00 k: neg
+258. instantzia: konf: %0,00 k: neg
+259. instantzia: konf: %100,00 k: pos
+260. instantzia: konf: %0,00 k: neg
+261. instantzia: konf: %100,00 k: pos
+262. instantzia: konf: %100,00 k: pos
+263. instantzia: konf: %100,00 k: pos
+264. instantzia: konf: %100,00 k: pos
+265. instantzia: konf: %100,00 k: pos
+266. instantzia: konf: %100,00 k: pos
+267. instantzia: konf: %100,00 k: pos
+268. instantzia: konf: %0,00 k: neg
+269. instantzia: konf: %0,00 k: neg
+270. instantzia: konf: %100,00 k: pos
+271. instantzia: konf: %100,00 k: pos
+272. instantzia: konf: %0,00 k: neg
+273. instantzia: konf: %0,00 k: neg
+274. instantzia: konf: %100,00 k: pos
+275. instantzia: konf: %100,00 k: pos
+276. instantzia: konf: %100,00 k: pos
+277. instantzia: konf: %100,00 k: pos
+278. instantzia: konf: %100,00 k: pos
+279. instantzia: konf: %0,00 k: neg
+280. instantzia: konf: %0,00 k: neg
+281. instantzia: konf: %0,00 k: neg
+282. instantzia: konf: %0,00 k: neg
+283. instantzia: konf: %0,00 k: neg
+284. instantzia: konf: %100,00 k: pos
+285. instantzia: konf: %0,00 k: neg
+286. instantzia: konf: %0,00 k: neg
+287. instantzia: konf: %0,00 k: neg
+288. instantzia: konf: %100,00 k: pos
+289. instantzia: konf: %100,00 k: pos
+290. instantzia: konf: %100,00 k: pos
+291. instantzia: konf: %0,00 k: neg
+292. instantzia: konf: %0,00 k: neg
+293. instantzia: konf: %0,00 k: neg
+294. instantzia: konf: %100,00 k: pos
+295. instantzia: konf: %100,00 k: pos
+296. instantzia: konf: %0,00 k: neg
+297. instantzia: konf: %100,00 k: pos
+298. instantzia: konf: %100,00 k: pos
+299. instantzia: konf: %0,00 k: neg
+300. instantzia: konf: %0,00 k: neg
+301. instantzia: konf: %100,00 k: pos
+302. instantzia: konf: %0,00 k: neg
+303. instantzia: konf: %0,00 k: neg
+304. instantzia: konf: %0,00 k: neg
+305. instantzia: konf: %100,00 k: pos
+306. instantzia: konf: %100,00 k: pos
+307. instantzia: konf: %0,00 k: neg
+308. instantzia: konf: %100,00 k: pos
+309. instantzia: konf: %100,00 k: pos
+310. instantzia: konf: %100,00 k: pos
+311. instantzia: konf: %100,00 k: pos
+312. instantzia: konf: %0,00 k: neg
+313. instantzia: konf: %100,00 k: pos
+314. instantzia: konf: %100,00 k: pos
+315. instantzia: konf: %0,00 k: neg
+316. instantzia: konf: %0,00 k: neg
+317. instantzia: konf: %100,00 k: pos
+318. instantzia: konf: %100,00 k: pos
+319. instantzia: konf: %0,00 k: neg
+320. instantzia: konf: %100,00 k: pos
+321. instantzia: konf: %0,00 k: neg
+322. instantzia: konf: %100,00 k: pos
+323. instantzia: konf: %0,00 k: neg
+324. instantzia: konf: %0,00 k: neg
+325. instantzia: konf: %100,00 k: pos
+326. instantzia: konf: %0,00 k: neg
+327. instantzia: konf: %0,00 k: neg
+328. instantzia: konf: %100,00 k: pos
+329. instantzia: konf: %0,00 k: neg
+330. instantzia: konf: %100,00 k: pos
+331. instantzia: konf: %100,00 k: pos
+332. instantzia: konf: %0,00 k: neg
+333. instantzia: konf: %0,00 k: neg
+334. instantzia: konf: %0,00 k: neg
+335. instantzia: konf: %100,00 k: pos
+336. instantzia: konf: %100,00 k: pos
+337. instantzia: konf: %0,00 k: neg
+338. instantzia: konf: %100,00 k: pos
+339. instantzia: konf: %0,00 k: neg
+340. instantzia: konf: %0,00 k: neg
+341. instantzia: konf: %0,00 k: neg
+342. instantzia: konf: %100,00 k: pos
+343. instantzia: konf: %0,00 k: neg
+344. instantzia: konf: %100,00 k: pos
+345. instantzia: konf: %100,00 k: pos
+346. instantzia: konf: %100,00 k: pos
+347. instantzia: konf: %0,00 k: neg
+348. instantzia: konf: %100,00 k: pos
+349. instantzia: konf: %100,00 k: pos
+350. instantzia: konf: %100,00 k: pos
+351. instantzia: konf: %0,00 k: neg
+352. instantzia: konf: %100,00 k: pos
+353. instantzia: konf: %0,00 k: neg
+354. instantzia: konf: %100,00 k: pos
+355. instantzia: konf: %100,00 k: pos
+356. instantzia: konf: %100,00 k: pos
+357. instantzia: konf: %0,00 k: neg
+358. instantzia: konf: %0,00 k: neg
+359. instantzia: konf: %0,00 k: neg
+360. instantzia: konf: %0,00 k: neg
+361. instantzia: konf: %100,00 k: pos
+362. instantzia: konf: %0,00 k: neg
+363. instantzia: konf: %100,00 k: pos
+364. instantzia: konf: %100,00 k: pos
+365. instantzia: konf: %100,00 k: pos
+366. instantzia: konf: %0,00 k: neg
+367. instantzia: konf: %100,00 k: pos
+368. instantzia: konf: %0,00 k: neg
+369. instantzia: konf: %100,00 k: pos
+370. instantzia: konf: %100,00 k: pos
+371. instantzia: konf: %100,00 k: pos
+372. instantzia: konf: %0,00 k: neg
+373. instantzia: konf: %100,00 k: pos
+374. instantzia: konf: %100,00 k: pos
+375. instantzia: konf: %100,00 k: pos
+376. instantzia: konf: %0,00 k: neg
+377. instantzia: konf: %0,00 k: neg
+378. instantzia: konf: %100,00 k: pos
+379. instantzia: konf: %0,00 k: neg
+380. instantzia: konf: %100,00 k: pos
+381. instantzia: konf: %0,00 k: neg
+382. instantzia: konf: %100,00 k: pos
+383. instantzia: konf: %100,00 k: pos
+384. instantzia: konf: %100,00 k: pos
+385. instantzia: konf: %100,00 k: pos
+386. instantzia: konf: %100,00 k: pos
+387. instantzia: konf: %0,00 k: neg
+388. instantzia: konf: %0,00 k: neg
+389. instantzia: konf: %0,00 k: neg
+390. instantzia: konf: %0,00 k: neg
+391. instantzia: konf: %0,00 k: neg
+392. instantzia: konf: %100,00 k: pos
+393. instantzia: konf: %0,00 k: neg
+394. instantzia: konf: %100,00 k: pos
+395. instantzia: konf: %0,00 k: neg
+396. instantzia: konf: %0,00 k: neg
+397. instantzia: konf: %100,00 k: pos
+398. instantzia: konf: %0,00 k: neg
+399. instantzia: konf: %0,00 k: neg
+400. instantzia: konf: %100,00 k: pos
