@@ -11,20 +11,20 @@ import java.util.Random;
 public class sMO {
 
     public static SMO[] main(Instances dataset) throws Exception {
-    
         // Ignorar advertencias de netlib-java y establecer propiedades para usar F2jBLAS y F2jLAPACK
         System.setProperty("com.github.fommil.netlib.BLAS", "com.github.fommil.netlib.F2jBLAS");
         System.setProperty("com.github.fommil.netlib.LAPACK", "com.github.fommil.netlib.F2jLAPACK");
 
         // Cargar los datos de entrenamiento
-        Instances train = dataset;
-        if (train == null) {
+        if (dataset == null) {
             System.out.println("Error: Unable to load training data.");
             return null;
         }
 
         // Preprocesar los datos si contienen atributos de texto
-        train = preprocessData(train);
+        Instances train = preprocessData(dataset);
+        train.setClassIndex(0);
+
 
         // Verificar si el atributo de clase es nominal o numérico
         if (train.classAttribute().isNominal()) {
@@ -65,6 +65,8 @@ public class sMO {
         double bestKernelParam1 = 0; // Puede ser Gamma, Exponent, Omega, etc.
         double bestKernelParam2 = 0; // Solo para PukKernel (Sigma)
         SMO bestModel = null;
+
+        train.setClassIndex(0);
 
         for (double c : cValues) {
             for (double param1 : (kernel instanceof weka.classifiers.functions.supportVector.RBFKernel ? gammaValues :
@@ -134,7 +136,7 @@ public class sMO {
 
             // Verificar si el atributo de clase es numérico y convertirlo a nominal si es necesario
             if (dataset.classIndex() != -1 && dataset.attribute(dataset.classIndex()).isNumeric()) {
-                dataset = convertNumericClassToNominal(dataset, dataset.classIndex());
+                dataset = convertNumericClassToNominal(dataset);
             }
 
             // Aplicar StringToWordVector si hay atributos de texto
@@ -160,9 +162,10 @@ public class sMO {
         }
     }
     
-    private static Instances convertNumericClassToNominal(Instances dataset, int classIndex) throws Exception {
+    private static Instances convertNumericClassToNominal(Instances dataset) throws Exception {
+        dataset.setClassIndex(0);
         weka.filters.unsupervised.attribute.NumericToNominal numericToNominal = new weka.filters.unsupervised.attribute.NumericToNominal();
-        numericToNominal.setAttributeIndices(String.valueOf(classIndex)); // Weka usa índices 1-based
+        numericToNominal.setAttributeIndices(String.valueOf(dataset.classIndex())); // Weka usa índices 1-based
         numericToNominal.setInputFormat(dataset);
         return Filter.useFilter(dataset, numericToNominal);
     }
