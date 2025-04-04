@@ -29,49 +29,46 @@ public class NonSparseBoW {
     public static NonSparseBoW getNonSparseBoW() {
         if (nireNonSparseBoW == null) {
             nireNonSparseBoW = new NonSparseBoW();
-        } return nireNonSparseBoW;
+        } 
+        return nireNonSparseBoW;
     }
 
     public Instances transformTrain(Instances data) {
-        Instances dataGarbi = datu_garbiketa(data);
-        Instances BoWData = transformToBoW(dataGarbi);
-        Instances NonSparseBoWData = transformToBoWNonSparse(BoWData);
-        Instances filteredData = filterAttributesByInfoGain(NonSparseBoWData);
-        Instances rankedData = rankAttributesByInfoGain(filteredData);
+        Instances dataGarbi = datu_garbiketa(data); // Datuak garbitu
+        Instances BoWData = transformToBoW(dataGarbi); // Bag of Words formatura aldatu
+        Instances NonSparseBoWData = transformToBoWNonSparse(BoWData); // Non-Sparse formatura aldatu
+        Instances filteredData = filterAttributesByInfoGain(NonSparseBoWData); // InfoGain bidez atributuak iragazi
+        Instances rankedData = rankAttributesByInfoGain(filteredData); // Atributuak InfoGain bidez ordenatu
+        Instances reorganizedData = reorderAttributesByDictionary(rankedData); // Reorder attributes in TrainBoW based on the updated dictionary (updated by the rank of InfoGain)
+        Instances normalizedData = normalizeData(reorganizedData); // Datuak normalizatu
+        
+        normalizedData.setClassIndex(0); // Klase atributua lehen atributua izan dadila
+        normalizedData.randomize(new java.util.Random(81)); // Randomizatu seed 81 erabiliz
 
-        // Normalizar los datos (no se si necesario)
-        Instances normalizedData = normalizeData(rankedData);
-
-        // Reorder attributes in TrainBoW based on the updated dictionary
-        normalizedData = reorderAttributesByDictionary(normalizedData);
-
-        normalizedData.setClassIndex(0);
-        normalizedData.randomize(new java.util.Random(81)); // Randomized by seed 81
         return normalizedData;
     }
 
     public Instances transformDevTest(Instances data) {
         try {
-            Instances datuak = datu_garbiketa(data);
+            Instances datuak = datu_garbiketa(data); // Datuak garbitu
             datuak.setClassIndex(datuak.numAttributes() - 1); // Azken atributua klasea da
 
             FixedDictionaryStringToWordVector filter = new FixedDictionaryStringToWordVector();
-            filter.setDictionaryFile(new File("datuak/dictionary.txt")); // Cargar el diccionario desde el archivo
-            filter.setLowerCaseTokens(true); // Convertir texto a minúsculas
-            filter.setOutputWordCounts(false); // Usar presencia binaria en lugar de conteo de palabras
-            filter.setAttributeIndices("first"); // Aplicar a todos los atributos
-
+            filter.setDictionaryFile(new File("datuak/dictionary.txt")); // Kargatu hiztegia fitxategitik
+            filter.setLowerCaseTokens(true); // Testua letra xehez bihurtu
+            filter.setOutputWordCounts(false); // Hitz kopurua erabili beharrean, presentzia binarioa erabili
+            filter.setAttributeIndices("first"); // Aplikatu atributu guztiei
             filter.setInputFormat(datuak);
+
             Instances filteredData = Filter.useFilter(datuak, filter);
-            filteredData.setClassIndex(filteredData.numAttributes() - 1); // Set the class index
+            filteredData.setClassIndex(filteredData.numAttributes() - 1); // Klase atributua ezarri
 
-            Instances NonSparseBoWData = transformToBoWNonSparse(filteredData);
+            Instances NonSparseBoWData = transformToBoWNonSparse(filteredData); // Non-Sparse formatura aldatu
+            Instances normalizedData = normalizeData(NonSparseBoWData); // Datuak normalizatu
 
-            // Normalizar los datos
-            Instances normalizedData = normalizeData(NonSparseBoWData);
+            normalizedData.setClassIndex(0); // Klase atributua lehen atributua izan dadila
+            normalizedData.randomize(new Random(81)); // Randomizatu seed 81 erabiliz
 
-            normalizedData.setClassIndex(0); // Set the class index 
-            normalizedData.randomize(new Random(81)); // Randomized by seed 81
             return normalizedData;
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da transformDevTest metodoa burutu.");
@@ -83,7 +80,7 @@ public class NonSparseBoW {
     private Instances datu_garbiketa(Instances datuak) {
         Pattern hashtagPattern = Pattern.compile("#\\w+");
         Pattern punctuationPattern = Pattern.compile("\\p{Punct}");
-        Pattern classWordPattern = Pattern.compile("\\b\\w*class\\w*\\b"); // Palabras que contienen "class"
+        Pattern classWordPattern = Pattern.compile("\\b\\w*class\\w*\\b"); // "class" hitza duten hitzak
 
         for (int i = 0; i < datuak.numInstances(); i++) {
             Instance instance = datuak.instance(i);
@@ -91,8 +88,8 @@ public class NonSparseBoW {
                 if (instance.attribute(j).isString()) {
                     String text = instance.stringValue(j);
                     text = text.replaceAll("\"", ""); // Komatxoak kendu
-                    text = text.toLowerCase(); // Letra xehetan bihurtu
-                    text = hashtagPattern.matcher(text).replaceAll(""); // Hashtagak kendu
+                    text = text.toLowerCase(); // Letra xehez bihurtu
+                    text = hashtagPattern.matcher(text).replaceAll(""); // Hashtag-ak kendu
                     text = punctuationPattern.matcher(text).replaceAll(""); // Puntuazioak kendu
                     text = classWordPattern.matcher(text).replaceAll(""); // "class" hitzak kendu
                     text = text.replaceAll("\\s+", " "); // Espazio gehiegizkoak kendu
@@ -100,40 +97,40 @@ public class NonSparseBoW {
                 }
             }
         }
-
         return datuak;
     }
 
     private Instances filterAttributesByInfoGain(Instances datuak) {
-        InfoGainAttributeEval evaluator = new InfoGainAttributeEval(); // Evaluador de InfoGain
+        InfoGainAttributeEval evaluator = new InfoGainAttributeEval(); // InfoGain ebaluatzailea
         try {
-            // Configurar el evaluador con las instancias
+            // Ebaluatzailea konfiguratu instantziekin
             datuak.setClassIndex(0);
             evaluator.buildEvaluator(datuak);
 
-            // Obtener los valores de InfoGain para cada atributo
+            // InfoGain balioak lortu atributu bakoitzerako
             double[] infoGainValues = new double[datuak.numAttributes()];
             for (int i = 0; i < datuak.numAttributes(); i++) {
                 infoGainValues[i] = evaluator.evaluateAttribute(i);
             }
             
-            // Crear una copia de las instancias para filtrar los atributos
+            // Instantzien kopia sortu atributuak iragazteko
             Instances filteredTrain = new Instances(datuak);
 
-            // Eliminar los atributos con InfoGain igual a 0, excepto el atributo de clase
+            // InfoGain balioa 0 den atributuak ezabatu, klase atributua izan ezik
             int classIndex = datuak.classIndex();
             for (int i = infoGainValues.length - 1; i >= 0; i--) {
-                if (i != classIndex && infoGainValues[i] == 0) { // Ignorar el atributo de clase
+                if (i != classIndex && infoGainValues[i] == 0) { 
+                    // Atributuak ezabatu infoGain zero bada eta klasea ez bada
                     filteredTrain.deleteAttributeAt(i);
                 }
             }
-            filteredTrain.setClassIndex(0); // Establecer el índice de clase en el conjunto filtrado
+            filteredTrain.setClassIndex(0); // Klase atributua ezarri iragazitako multzoan
 
-            // Imprimir el número de atributos antes y después de filtrar
-            System.out.println("Number of attributes before filtering: " + datuak.numAttributes());
-            System.out.println("Number of attributes after filtering: " + filteredTrain.numAttributes());
+            // Atributuen kopurua inprimatu iragazi aurretik eta ondoren
+            System.out.println("Atributuen kopurua iragazi aurretik: " + datuak.numAttributes());
+            System.out.println("Atributuen kopurua iragazi ondoren: " + filteredTrain.numAttributes());
 
-            // Actualizar dictionary file
+            // Hiztegia eguneratu
             updateDictionary(filteredTrain);
 
             return filteredTrain;
@@ -147,13 +144,13 @@ public class NonSparseBoW {
 
     private void updateDictionary(Instances filteredTrain) {
         try {
-            // Leer el archivo dictionary.txt
+            // dictionary.txt fitxategia irakurri
             File dictionaryFile = new File("datuak/dictionary.txt");
             List<String> dictionaryWords = new ArrayList<>();
             try (BufferedReader reader = new BufferedReader(new FileReader(dictionaryFile))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Extraer solo las palabras del diccionario (ignorar metadatos como "@@@numDocs")
+                    // Hiztegiaren hitzak atera (metadatuak baztertu, adibidez "@@@numDocs")
                     if (!line.startsWith("@") && line.contains(",")) {
                         String word = line.split(",")[0].trim();
                         dictionaryWords.add(word);
@@ -161,13 +158,13 @@ public class NonSparseBoW {
                 }
             }
 
-            // Obtener los nombres de los atributos de filteredTrain
+            // filteredTrain atributuen izenak lortu
             Set<String> filteredAttributes = new HashSet<>();
             for (int i = 0; i < filteredTrain.numAttributes(); i++) {
                 filteredAttributes.add(filteredTrain.attribute(i).name());
             }
 
-            // Filtrar las palabras del diccionario que no están en filteredTrain
+            // Hiztegiaren hitzak iragazi filteredTrain-en ez daudenak baztertuz
             List<String> updatedDictionary = new ArrayList<>();
             for (String word : dictionaryWords) {
                 if (filteredAttributes.contains(word)) {
@@ -175,15 +172,15 @@ public class NonSparseBoW {
                 }
             }
 
-            // Escribir el nuevo diccionario en el archivo
+            // Hiztegi berria fitxategian idatzi
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(dictionaryFile))) {
                 for (String word : updatedDictionary) {
-                    writer.write(word + ",1"); // Puedes ajustar el formato según sea necesario
+                    writer.write(word + ",1"); // Formatoa egokitu behar izanez gero
                     writer.newLine();
                 }
             }
 
-            System.out.println("Dictionary actualizado con " + updatedDictionary.size() + " palabras.");
+            System.out.println("Hiztegia eguneratu da " + updatedDictionary.size() + " hitzekin.");
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da dictionary.txt eguneratu.");
             e.printStackTrace();
@@ -192,6 +189,7 @@ public class NonSparseBoW {
 
     public Instances transformToBoW(Instances data) {
         data.setClassIndex(data.numAttributes() - 1); // Azken atributua klasea da
+        
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
         filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
@@ -214,8 +212,9 @@ public class NonSparseBoW {
 
     private Instances transformToBoWNonSparse(Instances data) {
         data.setClassIndex(data.numAttributes() - 1); // Azken atributua klasea da
-        SparseToNonSparse filter = new SparseToNonSparse();
+        
         try {
+            SparseToNonSparse filter = new SparseToNonSparse();
             filter.setInputFormat(data);
             Instances newData = Filter.useFilter(data, filter);
             return newData;
@@ -295,7 +294,7 @@ public class NonSparseBoW {
                 }
             }
 
-            System.out.println("Dictionary actualizado con atributos ordenados por InfoGain.");
+            System.out.println("Dictionary aldatu da atributuak InfoGain bidez ordenatuta daudelarik.");
         } catch (Exception e) {
             System.out.println("ERROREA: Ezin izan da dictionary.txt eguneratu ordenatutako atributuekin.");
             e.printStackTrace();
