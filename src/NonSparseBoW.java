@@ -50,6 +50,7 @@ public class NonSparseBoW {
         // Reorder attributes in TrainBoW based on the updated dictionary
         normalizedData = reorderAttributesByDictionary(normalizedData);
 
+        normalizedData.setClassIndex(0);
         normalizedData.randomize(new java.util.Random(81)); // Randomized by seed 81
         return normalizedData;
     }
@@ -232,6 +233,7 @@ public class NonSparseBoW {
 
     private Instances rankAttributesByInfoGain(Instances datuak) {
         try {
+            datuak.setClassIndex(0);
             // Configurar el evaluador de InfoGain
             InfoGainAttributeEval evaluator = new InfoGainAttributeEval();
 
@@ -363,6 +365,7 @@ public class NonSparseBoW {
 
     private Instances normalizeData(Instances data) {
         try {
+            data.setClassIndex(0);
             weka.filters.unsupervised.attribute.Normalize normalize = new weka.filters.unsupervised.attribute.Normalize();
             normalize.setInputFormat(data);
             return Filter.useFilter(data, normalize);

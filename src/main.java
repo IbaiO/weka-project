@@ -31,18 +31,12 @@ public class main {
         ///////////// PROCESAMENDUA /////////////
         instances = datuBilketa.getDB().bildu(inputPath, outputFile);
 
-        // Preprocesar el conjunto de desarrollo (Dev) // (no se si es necesario)
-        instances[1] = NonSparseBoW.getNonSparseBoW().transformDevTest(instances[1]);
-
         // Realizar predicciones para Dev
         iragarri.main(instances[0], instances[1], "Dev");
 
         // Combinar Train y Dev para Test
         Instances trainDev = new Instances(instances[0]);
-        trainDev.addAll(instances[1]);
-
-        // Preprocesar el conjunto de prueba (Test) //  (no se si es necesario)
-        instances[3] = NonSparseBoW.getNonSparseBoW().transformDevTest(instances[3]);
+        trainDev.addAll(instances[2]);
 
         // Realizar predicciones para Test
         iragarri.main(trainDev, instances[3], "Test");

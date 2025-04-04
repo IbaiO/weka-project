@@ -26,24 +26,22 @@ public class datuBilketa {
     public Instances[] bildu(String inPath, String outFile) {
         // Sarrerako datuak irakurri
         Instances train = datuakBildu(inPath + "/train");
-        train = randomizeInstances(train); // Randomize Train
         save(train, outFile + "Train.arff"); // Gorde datuak
         // Aldatu BoW formatura
         Instances trainBoW = NonSparseBoW.getNonSparseBoW().transformTrain(train);
         save(trainBoW, outFile + "TrainBoW.arff"); // Gorde datuak
 
-        // Dev datuak irakurri eta randomizatu
-        Instances dev = datuakBildu(inPath + "/dev");
-        dev = randomizeInstances(dev); // Randomize Dev
-        save(dev, outFile + "Dev.arff"); // Gorde datuak
-        Instances devBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev);
-        save(devBoW, outFile + "DevBoW.arff"); // Gorde datuak
+        // Dev datuak irakurri eta randomizatu (klaseekin)
+        Instances devWithClass = datuakBildu(inPath + "/dev");
+        save(devWithClass, outFile + "DevWithClass.arff"); // Gorde datuak
+        Instances devWithClassBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(devWithClass);
+        save(devWithClassBoW, outFile + "DevWithClassBoW.arff"); // Gorde datuak
 
-        // Dev2 sortu (klaseak ezezagunak)
-        Instances dev2 = createDev2(dev);
-        save(dev2, outFile + "Dev2.arff"); // Gorde datuak
-        Instances dev2BoW = NonSparseBoW.getNonSparseBoW().transformDevTest(dev2);
-        save(dev2BoW, outFile + "Dev2BoW.arff"); // Gorde datuak
+        // Dev sortu (klaseak ezezagunak jarriz)
+        Instances dev = createDev(devWithClass);
+        save(dev, outFile + "Dev.arff"); // Gorde datuak
+        Instances devBow = createDev(devWithClassBoW);
+        save(devBow, outFile + "DevBoW.arff"); // Gorde datuak
 
         // Test datuak irakurri
         Instances test = datuakBilduTest(inPath + "/test_blind");
@@ -51,7 +49,7 @@ public class datuBilketa {
         Instances testBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(test);
         save(testBoW, outFile + "TestBoW.arff"); //Gorde datuak
         
-        return new Instances[] {trainBoW, devBoW, dev2BoW, testBoW};        
+        return new Instances[] {trainBoW, devBow, devWithClassBoW, testBoW};        
     }
 
     private Instances datuakBildu(String inPath) {
@@ -253,13 +251,7 @@ public class datuBilketa {
         }
     }
 
-    private Instances randomizeInstances(Instances data) {
-        // Randomize the order of instances using a fixed seed
-        data.randomize(new java.util.Random(81)); // Seed 81 for reproducibility
-        return data;
-    }
-
-    private Instances createDev2(Instances dev) {
+    private Instances createDev(Instances dev) {
         try {
             // Create a copy of the Dev dataset
             Instances dev2 = new Instances(dev);
