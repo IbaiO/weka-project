@@ -4,8 +4,6 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instances;
 import weka.classifiers.functions.LinearRegression;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.StringToWordVector;
 
 import java.util.ArrayList;
 
@@ -35,63 +33,7 @@ public class linearRegression {
 
     private static Instances preprocessData(Instances dataset) {
         try {
-            // Ensure the class index is set before preprocessing
-            if (dataset.classIndex() == -1) {
-                dataset.setClassIndex(dataset.numAttributes() - 1); // Set the last attribute as the class
-            }
-
-            // Move the class attribute to the first position
-            if (dataset.classIndex() != 0) {
-                ArrayList<Attribute> attributes = new ArrayList<>();
-                attributes.add(dataset.attribute(dataset.classIndex())); // Add the class attribute first
-                for (int i = 0; i < dataset.numAttributes(); i++) {
-                    if (i != dataset.classIndex()) {
-                        attributes.add(dataset.attribute(i));
-                    }
-                }
-
-                Instances newDataset = new Instances(dataset.relationName(), attributes, dataset.numInstances());
-                newDataset.setClassIndex(0); // Set the class index to the first position
-
-                // Update instances to match the new attribute order
-                for (int i = 0; i < dataset.numInstances(); i++) {
-                    DenseInstance newInstance = new DenseInstance(newDataset.numAttributes());
-                    newInstance.setDataset(newDataset);
-
-                    // Set the class value first
-                    newInstance.setValue(0, dataset.instance(i).classValue());
-                    // Set the remaining attribute values
-                    int newIndex = 1;
-                    for (int j = 0; j < dataset.numAttributes(); j++) {
-                        if (j != dataset.classIndex()) {
-                            newInstance.setValue(newIndex++, dataset.instance(i).value(j));
-                        }
-                    }
-
-                    newDataset.add(newInstance);
-                }
-
-                dataset = newDataset;
-            }
-
-            // StringToWordVector iragazkia aplikatu, behar izanez gero.
-            boolean hasStringAttributes = false;
-            for (int i = 0; i < dataset.numAttributes(); i++) {
-                if (dataset.attribute(i).isString()) {
-                    hasStringAttributes = true;
-                    break;
-                }
-            }
-
-            if (hasStringAttributes) {
-                StringToWordVector stringToWordVector = new StringToWordVector();
-                stringToWordVector.setInputFormat(dataset);
-                dataset = Filter.useFilter(dataset, stringToWordVector);
-
-                // Reset the class index after applying the filter
-                dataset.setClassIndex(0); // Ensure the class index remains at the first position
-            }
-
+            dataset.setClassIndex(0);
             // Atributu bitar nominalak zenbakizkotan bihurtu
             if (dataset.classIndex() != -1) {
                 int classIndex = dataset.classIndex();

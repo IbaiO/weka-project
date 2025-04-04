@@ -4,46 +4,39 @@ import weka.classifiers.functions.SMO;
 import weka.classifiers.Evaluation;
 
 import weka.core.Instances;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.StringToWordVector;
 import java.util.Random;
 
 public class sMO {
 
     public static SMO[] main(Instances dataset) throws Exception {
+    
         // Ignorar advertencias de netlib-java y establecer propiedades para usar F2jBLAS y F2jLAPACK
         System.setProperty("com.github.fommil.netlib.BLAS", "com.github.fommil.netlib.F2jBLAS");
         System.setProperty("com.github.fommil.netlib.LAPACK", "com.github.fommil.netlib.F2jLAPACK");
 
-        // Cargar los datos de entrenamiento
         if (dataset == null) {
             System.out.println("Error: Unable to load training data.");
             return null;
         }
 
-        // Preprocesar los datos si contienen atributos de texto
-        Instances train = preprocessData(dataset);
-        train.setClassIndex(0);
-
-
         // Verificar si el atributo de clase es nominal o numérico
-        if (train.classAttribute().isNominal()) {
+        if (dataset.classAttribute().isNominal()) {
             System.out.println("The class attribute is nominal.");
-        } else if (train.classAttribute().isNumeric()) {
+        } else if (dataset.classAttribute().isNumeric()) {
             System.out.println("The class attribute is numeric.");
         } else {
             System.out.println("The class attribute is neither nominal nor numeric.");
         }
-
+        dataset.setClassIndex(0); // Set the class attribute index
         // Comparar diferentes kernels y optimizar C
         System.out.println("Evaluating PolyKernel...");
-        SMO polyKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.PolyKernel(), 2); // E = 2
+        SMO polyKernelModel = evaluateKernel(dataset, new weka.classifiers.functions.supportVector.PolyKernel(), 2); // E = 2
 
         System.out.println("Evaluating RBFKernel...");
-        SMO rbfKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.RBFKernel(), 0.01); // Gamma = 0.1
+        SMO rbfKernelModel = evaluateKernel(dataset, new weka.classifiers.functions.supportVector.RBFKernel(), 0.01); // Gamma = 0.1
 
         System.out.println("Evaluating PukKernel...");
-        SMO pukKernelModel = evaluateKernel(train, new weka.classifiers.functions.supportVector.Puk(), 1.0); // Omega = 1.0
+        SMO pukKernelModel = evaluateKernel(dataset, new weka.classifiers.functions.supportVector.Puk(), 1.0); // Omega = 1.0
 
 
         // Crear un arreglo para almacenar los modelos evaluados
@@ -65,8 +58,6 @@ public class sMO {
         double bestKernelParam1 = 0; // Puede ser Gamma, Exponent, Omega, etc.
         double bestKernelParam2 = 0; // Solo para PukKernel (Sigma)
         SMO bestModel = null;
-
-        train.setClassIndex(0);
 
         for (double c : cValues) {
             for (double param1 : (kernel instanceof weka.classifiers.functions.supportVector.RBFKernel ? gammaValues :
@@ -129,45 +120,4 @@ public class sMO {
         return bestModel;
     }
 
-    private static Instances preprocessData(Instances dataset) {
-        try {
-            // Configurar el índice de clase como el primer atributo
-            dataset.setClassIndex(0);
-
-            // Verificar si el atributo de clase es numérico y convertirlo a nominal si es necesario
-            if (dataset.classIndex() != -1 && dataset.attribute(dataset.classIndex()).isNumeric()) {
-                dataset = convertNumericClassToNominal(dataset);
-            }
-
-            // Aplicar StringToWordVector si hay atributos de texto
-            boolean hasStringAttributes = false;
-            for (int i = 0; i < dataset.numAttributes(); i++) {
-                if (dataset.attribute(i).isString()) {
-                    hasStringAttributes = true;
-                    break;
-                }
-            }
-
-            if (hasStringAttributes) {
-                StringToWordVector stringToWordVector = new StringToWordVector();
-                stringToWordVector.setInputFormat(dataset);
-                dataset = Filter.useFilter(dataset, stringToWordVector);
-            }
-
-            return dataset;
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
-    private static Instances convertNumericClassToNominal(Instances dataset) throws Exception {
-        dataset.setClassIndex(0);
-        weka.filters.unsupervised.attribute.NumericToNominal numericToNominal = new weka.filters.unsupervised.attribute.NumericToNominal();
-        numericToNominal.setAttributeIndices(String.valueOf(dataset.classIndex())); // Weka usa índices 1-based
-        numericToNominal.setInputFormat(dataset);
-        return Filter.useFilter(dataset, numericToNominal);
-    }
 }
-
