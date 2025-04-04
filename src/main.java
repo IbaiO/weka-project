@@ -1,7 +1,14 @@
 package src;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 
@@ -46,10 +53,11 @@ public class main {
         if (emaitzakDir.isDirectory()) {
             File[] predictionFiles = emaitzakDir.listFiles((dir1, name) -> name.startsWith("iragarpena_Dev") && name.endsWith(".txt"));
             if (predictionFiles != null) {
-                for (File predictionFile : predictionFiles) {
-                    System.out.println("Calculating accuracy for: " + predictionFile.getName());
-                    accuracyKalkulatu(predictionFile.getAbsolutePath(), instances[1]);
+                String[] predictionFilePaths = new String[predictionFiles.length];
+                for (int i = 0; i < predictionFiles.length; i++) {
+                    predictionFilePaths[i] = predictionFiles[i].getAbsolutePath();
                 }
+                accuracyKalkulatu(predictionFilePaths, instances[2]);
             }
         }
 
@@ -68,46 +76,90 @@ public class main {
         }
     }
 
-    public static double accuracyKalkulatu(String predictionsFilePath, Instances devSet) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(predictionsFilePath))) {
-            int correctPredictions = 0;
-            int totalInstances = devSet.numInstances();
-            int instanceIndex = 0;
+    public static void accuracyKalkulatu(String[] predictionFilePaths, Instances devSet) {
+        try {
+            // Crear una tabla para almacenar los resultados
+            List<String[]> table = new ArrayList<>();
+            table.add(new String[]{"True Value", "Linear Regression", "SMO Poly Kernel", "SMO RBF Kernel", "SMO Puk Kernel"});
 
+            // Leer las predicciones de cada archivo
+            Map<String, List<String>> predictions = new HashMap<>();
+            for (String filePath : predictionFilePaths) {
+                String method = extractMethodFromFilePath(filePath);
+                predictions.put(method, readPredictions(filePath));
+            }
+
+            // Variables para calcular accuracy
+            int[] correctPredictions = new int[4];
+            int totalInstances = devSet.numInstances();
+
+            // Iterar sobre las instancias del conjunto Dev
+            for (int i = 0; i < totalInstances; i++) {
+                String trueValue = devSet.instance(i).stringValue(devSet.classIndex());
+                String linearRegressionPrediction = predictions.getOrDefault("Linear Regression", new ArrayList<>()).get(i);
+                String smoPolyKernelPrediction = predictions.getOrDefault("SMO Poly Kernel", new ArrayList<>()).get(i);
+                String smoRBFKernelPrediction = predictions.getOrDefault("SMO RBF Kernel", new ArrayList<>()).get(i);
+                String smoPukKernelPrediction = predictions.getOrDefault("SMO Puk Kernel", new ArrayList<>()).get(i);
+
+                // Contar predicciones correctas
+                if (trueValue.equalsIgnoreCase(linearRegressionPrediction)) correctPredictions[0]++;
+                if (trueValue.equalsIgnoreCase(smoPolyKernelPrediction)) correctPredictions[1]++;
+                if (trueValue.equalsIgnoreCase(smoRBFKernelPrediction)) correctPredictions[2]++;
+                if (trueValue.equalsIgnoreCase(smoPukKernelPrediction)) correctPredictions[3]++;
+
+                // Añadir la fila a la tabla
+                table.add(new String[]{trueValue, linearRegressionPrediction, smoPolyKernelPrediction, smoRBFKernelPrediction, smoPukKernelPrediction});
+            }
+
+            // Guardar la tabla en un archivo
+            saveTableToFile(table, "src/emaitzak/accuracy_table.txt");
+
+            // Calcular y mostrar accuracies
+            System.out.println("Accuracy Results:");
+            System.out.println("Linear Regression: " + String.format("%.2f", (double) correctPredictions[0] / totalInstances * 100) + "%");
+            System.out.println("SMO Poly Kernel: " + String.format("%.2f", (double) correctPredictions[1] / totalInstances * 100) + "%");
+            System.out.println("SMO RBF Kernel: " + String.format("%.2f", (double) correctPredictions[2] / totalInstances * 100) + "%");
+            System.out.println("SMO Puk Kernel: " + String.format("%.2f", (double) correctPredictions[3] / totalInstances * 100) + "%");
+
+            System.out.println("Accuracy table saved to: src/emaitzak/accuracy_table.txt");
+        } catch (Exception e) {
+            System.out.println("ERROREA: Ezin izan da accuracy taula sortu.");
+            e.printStackTrace();
+        }
+    }
+
+    private static String extractMethodFromFilePath(String filePath) {
+        if (filePath.contains("LinearRegression")) return "Linear Regression";
+        if (filePath.contains("SMO_PolyKernel")) return "SMO Poly Kernel";
+        if (filePath.contains("SMO_RBFKernel")) return "SMO RBF Kernel";
+        if (filePath.contains("SMO_PukKernel")) return "SMO Puk Kernel";
+        return "Unknown";
+    }
+
+    private static List<String> readPredictions(String filePath) throws IOException {
+        List<String> predictions = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Saltar líneas que no contienen predicciones
-                if (!line.contains("instantzia:")) {
-                    continue;
+                if (line.contains("instantzia:")) {
+                    // Extraer la clase predicha desde la línea
+                    String[] parts = line.split("k:"); // Dividir la línea por "k:"
+                    if (parts.length > 1) {
+                        String predictedClass = parts[1].trim(); // Obtener la clase predicha
+                        predictions.add(predictedClass);
+                    }
                 }
-
-                // Extraer la clase predicha de la línea
-                String predictedClass = line.trim().endsWith("Pos") ? "pos" : "neg";
-
-                // Obtener la clase real del conjunto de desarrollo
-                String actualClass = devSet.instance(instanceIndex).stringValue(devSet.classIndex());
-
-                // Comparar la clase predicha con la clase real
-                if (predictedClass.equalsIgnoreCase(actualClass)) {
-                    correctPredictions++;
-                }
-
-                instanceIndex++;
             }
+        }
+        return predictions;
+    }
 
-            // Verificar que el número de predicciones coincida con el número de instancias
-            if (instanceIndex != totalInstances) {
-                System.out.println("Warning: El número de predicciones no coincide con el número de instancias en el conjunto de desarrollo.");
+    private static void saveTableToFile(List<String[]> table, String filePath) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (String[] row : table) {
+                writer.write(String.join("\t", row));
+                writer.newLine();
             }
-
-            // Calcular el accuracy como porcentaje
-            double accuracy = (double) correctPredictions / totalInstances * 100;
-            System.out.println("Accuracy: " + String.format("%.2f", accuracy) + "%");
-            return accuracy;
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da iragarpen fitxategia irakurri edo prozesatu.");
-            e.printStackTrace();
-            return -1;
         }
     }
 }
