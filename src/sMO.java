@@ -23,12 +23,17 @@ public class sMO {
             return null;
         }
 
-        System.out.println("Índice de clase: " + train.classIndex());
-        System.out.println("Nombre del atributo de clase: " + train.attribute(train.classIndex()).name());
-        System.out.println("Tipo del atributo de clase: " + (train.attribute(train.classIndex()).isNominal() ? "Nominal" : "Numérico"));
-
         // Preprocesar los datos si contienen atributos de texto
         train = preprocessData(train);
+
+        // Verificar si el atributo de clase es nominal o numérico
+        if (train.classAttribute().isNominal()) {
+            System.out.println("The class attribute is nominal.");
+        } else if (train.classAttribute().isNumeric()) {
+            System.out.println("The class attribute is numeric.");
+        } else {
+            System.out.println("The class attribute is neither nominal nor numeric.");
+        }
 
         // Comparar diferentes kernels y optimizar C
         System.out.println("Evaluating PolyKernel...");
@@ -50,7 +55,7 @@ public class sMO {
 
     private static SMO evaluateKernel(Instances train, weka.classifiers.functions.supportVector.Kernel kernel, double kernelParam) throws Exception {
         double[] cValues = {0.1, 1, 10}; // Valores de C a probar
-        double[] gammaValues = {0.01, 0.1, 1}; // Valores de Gamma (para RBFKernel)
+        double[] gammaValues = {0.001, 0.01, 0.1, 1}; // Rango más razonable
         double[] exponentValues = {1, 2, 3}; // Valores de Exponent (para PolyKernel)
         double[] omegaValues = {0.5, 1.0, 2.0}; // Valores de Omega (para PukKernel)
         double[] sigmaValues = {0.5, 1.0, 2.0}; // Valores de Sigma (para PukKernel)
@@ -157,7 +162,7 @@ public class sMO {
     
     private static Instances convertNumericClassToNominal(Instances dataset, int classIndex) throws Exception {
         weka.filters.unsupervised.attribute.NumericToNominal numericToNominal = new weka.filters.unsupervised.attribute.NumericToNominal();
-        numericToNominal.setAttributeIndices(String.valueOf(classIndex + 1)); // Weka usa índices 1-based
+        numericToNominal.setAttributeIndices(String.valueOf(classIndex)); // Weka usa índices 1-based
         numericToNominal.setInputFormat(dataset);
         return Filter.useFilter(dataset, numericToNominal);
     }
