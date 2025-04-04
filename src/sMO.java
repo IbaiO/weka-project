@@ -2,7 +2,6 @@ package src;
 
 import weka.classifiers.functions.SMO;
 import weka.classifiers.Evaluation;
-
 import weka.core.Instances;
 import weka.filters.Filter;
 
@@ -11,7 +10,6 @@ import java.util.Random;
 public class sMO {
 
     public static SMO[] main(Instances dataset) throws Exception {
-    
         // Ignorar advertencias de netlib-java y establecer propiedades para usar F2jBLAS y F2jLAPACK
         System.setProperty("com.github.fommil.netlib.BLAS", "com.github.fommil.netlib.F2jBLAS");
         System.setProperty("com.github.fommil.netlib.LAPACK", "com.github.fommil.netlib.F2jLAPACK");
@@ -36,7 +34,6 @@ public class sMO {
 
         System.out.println("Evaluating PukKernel...");
         SMO pukKernelModel = evaluateKernel(balancedTrainSet, new weka.classifiers.functions.supportVector.Puk(), 1.0); // Omega = 1.0
-
 
         // Crear un arreglo para almacenar los modelos evaluados
         SMO[] models = {polyKernelModel, rbfKernelModel, pukKernelModel};

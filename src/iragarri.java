@@ -3,11 +3,8 @@ package src;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.SMO;
-
 import weka.core.Instance;
 import weka.core.Instances;
-//import weka.filters.unsupervised.attribute.StringToWordVector;
-//import weka.filters.Filter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -15,6 +12,7 @@ import java.io.IOException;
 
 
 public class iragarri {
+    
     public static void main(Instances trainSet, Instances testSet, String mota) throws Exception {
         if (trainSet == null || testSet == null) {
             System.out.println("Errorea: Ezin izan da datu multzoak kargatu.");

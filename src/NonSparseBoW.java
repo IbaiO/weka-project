@@ -24,6 +24,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 import weka.filters.unsupervised.instance.SparseToNonSparse;
 
 public class NonSparseBoW {
+    
     private static NonSparseBoW nireNonSparseBoW = null;
 
     public static NonSparseBoW getNonSparseBoW() {

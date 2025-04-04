@@ -8,6 +8,7 @@ import weka.classifiers.functions.LinearRegression;
 import java.util.ArrayList;
 
 public class linearRegression {
+    
     public static LinearRegression main(Instances dataset) throws Exception {
         // Klasearen indizea ezarri.
         if (dataset.classIndex() == -1) {
@@ -27,7 +28,6 @@ public class linearRegression {
             System.out.println("ERROREA: Ezin izan da modeloa eraiki.");
             return null;
         }
-
         return model;
     }
 

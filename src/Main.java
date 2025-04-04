@@ -14,6 +14,7 @@ import java.util.Map;
 import weka.core.Instances;
 
 public class Main {
+    
     public static void main(String[] args) throws Exception {
         ///////////// HASIERAKETAK /////////////
         if (args.length != 2) {
