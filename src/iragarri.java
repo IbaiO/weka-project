@@ -31,36 +31,21 @@ public class iragarri {
         SMO modelSMO1 = modelSMO[0];
         SMO modelSMO2 = modelSMO[1];
         SMO modelSMO3 = modelSMO[2];
-        if (modelLR != null) {
-            // Preprocesar el conjunto de prueba
-            Instances processedTestSet = preprocessTestData(testSet, trainSet);
-            if (processedTestSet == null) {
-                System.out.println("Errorea: Ezin izan da test datuak aurreprozesatu.");
-                return;
-            }
-
-         
+        if (modelLR != null) {         
             // Realizar predicciones
-            iragarketakEgin(modelLR, processedTestSet, "lineal", mota);
+            iragarketakEgin(modelLR, testSet, "lineal", mota);
         }
 
         if (modelSMO != null) {
-            // Preprocesar el conjunto de prueba
-            Instances processedTestSet = preprocessTestData(testSet, trainSet);
-            if (processedTestSet == null) {
-                System.out.println("Errorea: Ezin izan da test datuak aurreprozesatu.");
-                return;
-            }
-
             // Realizar predicciones
-            iragarketakEgin(modelSMO1, processedTestSet, "SMO1", mota);
-            iragarketakEgin(modelSMO2, processedTestSet, "SMO2", mota);
-            iragarketakEgin(modelSMO3, processedTestSet, "SMO3", mota);
+            iragarketakEgin(modelSMO1, testSet, "SMO1", mota);
+            iragarketakEgin(modelSMO2, testSet, "SMO2", mota);
+            iragarketakEgin(modelSMO3, testSet, "SMO3", mota);
         }
     }
 
     private static void iragarketakEgin(Classifier model, Instances instantzia, String modelType, String mota) throws Exception {
-
+        instantzia.setClassIndex(0); // Klasea atributua ezarri instantzie
         if (modelType.equals("lineal")) {
             String outputFilePath = "src/emaitzak/iragarpena_"+mota+"_LinearRegression.txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
@@ -161,29 +146,6 @@ public class iragarri {
                 System.out.println("ERROREA: Ezin izan da iragarpenik egin.");
                 e.printStackTrace();
             }     
-        }
-    }
-
-    private static Instances preprocessTestData(Instances testSet, Instances trainSet) {
-        try {
-            // Aplicar el mismo preprocesamiento que el conjunto de entrenamiento
-            StringToWordVector stringToWordVector = new StringToWordVector();
-            stringToWordVector.setInputFormat(trainSet); // Usar el formato del conjunto de entrenamiento
-            Instances processedTestSet = Filter.useFilter(testSet, stringToWordVector);
-
-            // Manejar valores faltantes
-            weka.filters.unsupervised.attribute.ReplaceMissingValues replaceMissingValues = new weka.filters.unsupervised.attribute.ReplaceMissingValues();
-            replaceMissingValues.setInputFormat(processedTestSet);
-            processedTestSet = Filter.useFilter(processedTestSet, replaceMissingValues);
-
-            // Configurar índice de clase
-            processedTestSet.setClassIndex(0);
-
-            return processedTestSet;
-        } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da test datuak aurreprozesatu.");
-            e.printStackTrace();
-            return null;
         }
     }
 }
