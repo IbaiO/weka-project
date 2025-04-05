@@ -1,0 +1,11 @@
+=== Cross-validation Results ===
+Model: LinearRegression
+Accuracy: 50,25%
+Precision: 0,4941
+Recall: 0,4949
+F1 Score: 0,4945
+
+Confusion Matrix
+   a   b   <-- classified as
+  292 298 |   a = pos
+  299 311 |   b = neg

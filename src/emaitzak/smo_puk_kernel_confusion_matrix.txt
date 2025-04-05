@@ -1,0 +1,5 @@
+Confusion Matrix for SMO Puk Kernel:
+		Predicted: pos	Predicted: neg
+True: pos	216		0
+True: neg	184		0
+-----------------------------------
