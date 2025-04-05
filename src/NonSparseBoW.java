@@ -193,13 +193,12 @@ public class NonSparseBoW {
         
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
-        filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
+        filter.setOutputWordCounts(true); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
         filter.setAttributeIndices("first"); // Atributu guztiei aplikatu
         filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
         filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
         filter.setDictionaryFileToSaveTo(new File("datuak/dictionary.txt")); // Irakurri iragazkia fitxategitik
-        filter.setIDFTransform(true); // TF-IDF aplikatu
-        filter.setMinTermFreq(0); // Frekuentzia minimoa ezarri
+        filter.setIDFTransform(false); // TF-IDF aplikatu
 
         try {
             filter.setInputFormat(data);
