@@ -18,14 +18,14 @@ public class linearRegression {
         // Datuak prozesatu.
         dataset = preprocessData(dataset);
         if (dataset == null) {
-            System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
+            System.out.println("ERROREA: Ezin izan dira datuak prozesatu."); // Error: Could not process data
             return null;
         }
 
         // Modeloa eraiki.
         LinearRegression model = buildModel(dataset);
         if (model == null) {
-            System.out.println("ERROREA: Ezin izan da modeloa eraiki.");
+            System.out.println("ERROREA: Ezin izan da modeloa eraiki."); // Error: Could not build the model
             return null;
         }
         return model;
@@ -42,7 +42,7 @@ public class linearRegression {
                     ArrayList<Attribute> attributes = new ArrayList<>();
                     for (int i = 0; i < dataset.numAttributes(); i++) {
                         if (i == classIndex) {
-                            // Reemplazar el atributo de clase nominal con un atributo numérico
+                            // Klase atributu nominala atributu zenbakizko batekin ordezkatu
                             attributes.add(new Attribute("class"));
                         } else {
                             attributes.add(dataset.attribute(i));
@@ -62,13 +62,13 @@ public class linearRegression {
                             if (j == classIndex) {
                                 String classValue = dataset.instance(i).stringValue(classIndex);
                                 if (classValue.equalsIgnoreCase("pos")) {
-                                    newInstance.setValue(classIndex, 1);
+                                    newInstance.setValue(classIndex, 1); // Pos klasea 1 bezala ezarri
                                 } else if (classValue.equalsIgnoreCase("neg")) {
-                                    newInstance.setValue(classIndex, 0);
+                                    newInstance.setValue(classIndex, 0); // Neg klasea 0 bezala ezarri
                                 } else if (classValue.equals("?")) {
-                                    newInstance.setMissing(classIndex);
+                                    newInstance.setMissing(classIndex); // Balio ezezaguna
                                 } else {
-                                    newInstance.setValue(classIndex, -1);
+                                    newInstance.setValue(classIndex, -1); // Balio ezezaguna (-1)
                                 }
                             } else {
                                 newInstance.setValue(j, dataset.instance(i).value(j));
@@ -83,7 +83,7 @@ public class linearRegression {
 
             return dataset;
         } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan dira datuak prozesatu.");
+            System.out.println("ERROREA: Ezin izan dira datuak prozesatu."); // Error: Could not process data
             e.printStackTrace();
             return null;
         }
@@ -92,10 +92,10 @@ public class linearRegression {
     private static LinearRegression buildModel(Instances dataset) {
         try {
             LinearRegression model = new LinearRegression();
-            model.buildClassifier(dataset);
+            model.buildClassifier(dataset); // Build the Linear Regression model
             return model;
         } catch (Exception e) {
-            System.out.println("ERROREA: Ezin izan da modeloa eraiki.");
+            System.out.println("ERROREA: Ezin izan da modeloa eraiki."); // Error: Could not build the model
             e.printStackTrace();
             return null;
         }
