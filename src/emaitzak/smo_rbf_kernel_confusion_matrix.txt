@@ -1,5 +1,5 @@
 Confusion Matrix for SMO RBF Kernel:
 		Predicted: pos	Predicted: neg
-True: pos	213		3
-True: neg	183		1
+True: pos	206		10
+True: neg	172		12
 -----------------------------------

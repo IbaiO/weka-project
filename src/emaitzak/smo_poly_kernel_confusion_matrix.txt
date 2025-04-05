@@ -1,5 +1,5 @@
 Confusion Matrix for SMO Poly Kernel:
 		Predicted: pos	Predicted: neg
-True: pos	186		30
-True: neg	157		27
+True: pos	82		134
+True: neg	66		118
 -----------------------------------

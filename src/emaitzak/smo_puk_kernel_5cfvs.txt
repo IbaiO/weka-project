@@ -1,11 +1,11 @@
 === Cross-validation Results ===
 Model: SMO
-Accuracy: 82,08%
-Precision: 0,82
-Recall: 0,82
-F1 Score: 0,82
+Accuracy: 79,75%
+Precision: 0,80
+Recall: 0,80
+F1 Score: 0,80
 Confusion Matrix
    a   b   <-- classified as
- 482 108 |   a = pos
- 107 503 |   b = neg
+ 439 151 |   a = pos
+  92 518 |   b = neg
 

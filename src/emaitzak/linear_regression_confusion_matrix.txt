@@ -1,5 +1,5 @@
 Confusion Matrix for Linear Regression:
 		Predicted: pos	Predicted: neg
-True: pos	146		70
-True: neg	140		44
+True: pos	157		59
+True: neg	134		50
 -----------------------------------
