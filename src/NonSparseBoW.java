@@ -198,6 +198,8 @@ public class NonSparseBoW {
         filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
         filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
         filter.setDictionaryFileToSaveTo(new File("datuak/dictionary.txt")); // Irakurri iragazkia fitxategitik
+        filter.setIDFTransform(true); // TF-IDF aplikatu
+        filter.setMinTermFreq(0); // Frekuentzia minimoa ezarri
 
         try {
             filter.setInputFormat(data);
