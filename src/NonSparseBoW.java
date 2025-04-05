@@ -82,6 +82,7 @@ public class NonSparseBoW {
         Pattern hashtagPattern = Pattern.compile("#\\w+");
         Pattern punctuationPattern = Pattern.compile("\\p{Punct}");
         Pattern classWordPattern = Pattern.compile("\\b\\w*class\\w*\\b"); // "class" hitza duten hitzak
+        Pattern numberPattern = Pattern.compile("\\d+"); // Zenbakiak detektatzeko patroia
 
         for (int i = 0; i < datuak.numInstances(); i++) {
             Instance instance = datuak.instance(i);
@@ -93,6 +94,7 @@ public class NonSparseBoW {
                     text = hashtagPattern.matcher(text).replaceAll(""); // Hashtag-ak kendu
                     text = punctuationPattern.matcher(text).replaceAll(""); // Puntuazioak kendu
                     text = classWordPattern.matcher(text).replaceAll(""); // "class" hitzak kendu
+                    text = numberPattern.matcher(text).replaceAll(""); // Zenbakiak kendu
                     text = text.replaceAll("\\s+", " "); // Espazio gehiegizkoak kendu
                     instance.setValue(j, text);
                 }
@@ -193,7 +195,7 @@ public class NonSparseBoW {
         
         StringToWordVector filter = new StringToWordVector();
         filter.setLowerCaseTokens(true); // Letra xehez jarri testua
-        filter.setOutputWordCounts(true); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
+        filter.setOutputWordCounts(false); // Ez zenbatu hitzak, bakarrik presentzia (binarioa)
         filter.setAttributeIndices("first"); // Atributu guztiei aplikatu
         filter.setDoNotOperateOnPerClassBasis(true); // Ez erabili klase bakoitzeko
         filter.setTokenizer(new weka.core.tokenizers.WordTokenizer()); // Tokenizatzailea
