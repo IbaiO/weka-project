@@ -36,10 +36,10 @@ public class datuBilketa {
         Instances devWithClassBoW = NonSparseBoW.getNonSparseBoW().transformDevTest(devWithClass);
         save(devWithClassBoW, outFile + "DevWithClassBoW.arff"); // Datuak gorde
 
-        // Dev sortu (klaseak ezezagunak jarriz)
-        Instances dev = createDev(devWithClass);
+        // Dev sortu (klaseak ezezagunak jarriz) - Solo para la versión sin clases
+        Instances dev = createDev(new Instances(devWithClass)); // Copia de devWithClass
         save(dev, outFile + "Dev.arff"); // Datuak gorde
-        Instances devBow = createDev(devWithClassBoW);
+        Instances devBow = createDev(new Instances(devWithClassBoW)); // Copia de devWithClassBoW
         save(devBow, outFile + "DevBoW.arff"); // Datuak gorde
 
         // Test datuak irakurri

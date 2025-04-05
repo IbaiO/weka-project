@@ -42,12 +42,12 @@ public class Main {
 
         // Dev-rako iragarpenak egin
         iragarri.main(instances[0], instances[1], "Dev");
-
-        // Train eta Dev konbinatu Test-rako
+ 
+        // Train eta Dev konbinatu Test-erako
         Instances trainDev = new Instances(instances[0]);
         trainDev.addAll(instances[2]);
 
-        // Test-rako iragarpenak egin
+        // Test-erako iragarpenak egin
         iragarri.main(trainDev, instances[3], "Test");
 
         ///////////// ACCURACY KALKULATU /////////////

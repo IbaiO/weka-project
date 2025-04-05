@@ -60,7 +60,7 @@ public class iragarri {
                     // Lerro formateatua idatzi
                     writer.write((i + 1) + ". instantzia:     konf: %" +
                                  String.format("%.2f", prediction * 100) +
-                                 "       k: " + (predictedClass ? "Pos" : "Neg") + "\n");
+                                 "       k: " + (predictedClass ? "pos" : "neg") + "\n");
                 }
                 System.out.println("Predictions saved to: " + outputFilePath);
             } catch (IOException e) {
