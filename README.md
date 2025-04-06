@@ -5,7 +5,7 @@ Exekutagarri honek programaren ataza guztiak betetzen dituen .jar artxiboa da. B
 - Irteeraren izena: Programak sortuko dituen fitxategiak gordetzeko erabili nahi den karpetaren helbidean. Bertan iragarpenak, nahasmen matrizeak eta 5-fold cross-validation emaitzak gordeko dira. Emaitza hauek bi modelo mota ezberdinekin aterako dira: LinearRegression eta SMO (kernel bakoitzarentzat bat) algortimoak erabilita hain zuzen ere.
 
 Honetaz aparte, beste irteera batzuk gehituko ditu:
-    - Karpeta bat .arff guztiekin. Prozesu ezberdinetan sortutako .arff izango dira, non formatuan ezberdinduko diren.
+- Karpeta bat .arff guztiekin. Prozesu ezberdinetan sortutako .arff izango dira, non formatuan ezberdinduko diren.
 
 Terminaletik exekutatu behar da; guk hurrengo komandoa erabili dugu:
     $ java -jar weka-project.jar movies_reviews emaitzak
